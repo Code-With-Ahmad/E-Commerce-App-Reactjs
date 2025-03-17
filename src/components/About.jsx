@@ -5,7 +5,6 @@ const About = () => {
     <footer className="bg-[#000000] dark:bg-slate-900 text-white py-10 border-t-2 border-white  ">
       <div className="px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8 xl:grid-cols-[2fr_1fr_1fr_2fr]">
-          {/* About Us Section */}
           <div className="space-y-4 ">
             <div className="w-32">
               <img
@@ -91,7 +90,6 @@ const About = () => {
             </ul>
           </div>
 
-          {/* Newsletter Section */}
           <div className="space-y-4 xl:ps-5">
             <h3 className="text-lg xl:text-2xl font-semibold mb-4">
               Sign Up To Newsletter
