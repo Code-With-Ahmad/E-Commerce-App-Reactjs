@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchProductById } from "../api/productActions";
+import api from "../api/api";
 import { useCart } from "../context/CartProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -9,37 +8,36 @@ import { toast, ToastContainer } from "react-toastify";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { items, status, error } = useSelector((state) => state.products);
   const { favorites, addToCart, toggleFavorite } = useCart();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [status, setStatus] = useState("idle");
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadProduct = async () => {
+    const fetchProduct = async () => {
+      setStatus("loading");
       try {
-        const fetchedProduct = await dispatch(fetchProductById(id)).unwrap();
-        setProduct(fetchedProduct);
+        const response = await api.get(`/products/${id}`);
+        setProduct(response.data);
         setIsFavorite(favorites.some((fav) => fav.productId === id));
+        setStatus("succeeded");
       } catch (err) {
+        setError(err.message);
+        setStatus("failed");
         navigate("/home");
       }
     };
 
-    if (!items.find((item) => item.id === Number(id))) {
-      loadProduct();
-    } else {
-      const existingProduct = items.find((item) => item.id === Number(id));
-      setProduct(existingProduct);
-      setIsFavorite(favorites.some((fav) => fav.productId === id));
-    }
-  }, [id, dispatch, items, navigate, favorites]);
+    fetchProduct();
+  }, [id, favorites, navigate]);
 
   const handleAddToCart = () => {
     if (product) {
       addToCart(product, quantity);
+      toast.success("Added to cart!");
     }
   };
 
@@ -84,7 +82,8 @@ const ProductDetail = () => {
                   ${product.price}
                 </span>
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  Rating: {product.rating.rate} ({product.rating.count} reviews)
+                  Rating: {product.rating?.rate} ({product.rating?.count}{" "}
+                  reviews)
                 </span>
               </div>
               <div className="flex items-center gap-4 mb-4">

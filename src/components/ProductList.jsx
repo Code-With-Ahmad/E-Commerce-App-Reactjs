@@ -1,27 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { fetchProducts } from "../api/productActions";
+import api from "../api/api";
 import ProductCard from "../components/ProductCard";
 
 const ProductList = ({ isCategoryPage }) => {
   console.log(isCategoryPage);
 
-  const dispatch = useDispatch();
   const { categoryName } = useParams();
-  const { items, status, error } = useSelector((state) => state.products);
+  const [products, setProducts] = useState([]);
+  const [status, setStatus] = useState("idle");
+  const [error, setError] = useState(null);
   const [sortOrder, setSortOrder] = useState("default");
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchProducts());
-    }
-  }, [status, dispatch]);
+    const fetchProducts = async () => {
+      setStatus("loading");
+      try {
+        const response = await api.get("/products");
+        setProducts(response.data);
+        setStatus("succeeded");
+      } catch (err) {
+        setError(err.message);
+        setStatus("failed");
+      }
+    };
 
-  let filteredProducts = items;
+    fetchProducts();
+  }, []);
+
+  let filteredProducts = products;
 
   if (isCategoryPage && categoryName) {
-    filteredProducts = items.filter(
+    filteredProducts = products.filter(
       (product) =>
         product.category.toLowerCase() ===
         decodeURIComponent(categoryName).toLowerCase()
@@ -72,7 +82,7 @@ const ProductList = ({ isCategoryPage }) => {
       {status === "succeeded" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 mx-auto w-[80vw]">
           {sortedProducts.map((product) => (
-            <div className="flex justify-center " key={product.id}>
+            <div className="flex justify-center" key={product.id}>
               <ProductCard product={product} />
             </div>
           ))}
