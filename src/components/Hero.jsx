@@ -1,10 +1,9 @@
 import React from "react";
-import bgHero from "../assets/images/fsr_ms2.jpg";
 import { Link } from "react-router-dom";
 const Hero = () => {
   return (
     <>
-      <div className="P hero h-100 relative w-screen px-5">
+      <div className="hero h-100 relative w-screen px-5">
         <div className="absolute bottom-50 left-20 text-white">
           <h2 className="text-4xl font-bold text-white">Timeless Essence </h2>
           <p className="py-4">
