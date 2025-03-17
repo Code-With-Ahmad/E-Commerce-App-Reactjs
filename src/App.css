@@ -1,0 +1,116 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+* {
+  font-family: "Roboto", sans-serif;
+}
+.ul li:hover {
+  translate: 10px;
+  transition: 0.3s linear;
+  color: white;
+}
+
+/* From Uiverse.io by satyamchaudharydev */
+.loading {
+  --speed-of-animation: 0.9s;
+  --gap: 6px;
+  --first-color: #4c86f9;
+  --second-color: #49a84c;
+  --third-color: #f6bb02;
+  --fourth-color: #f6bb02;
+  --fifth-color: #2196f3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  gap: 6px;
+  height: 100px;
+}
+
+.loading span {
+  width: 4px;
+  height: 50px;
+  background: var(--first-color);
+  animation: scale var(--speed-of-animation) ease-in-out infinite;
+}
+
+.loading span:nth-child(2) {
+  background: var(--second-color);
+  animation-delay: -0.8s;
+}
+
+.loading span:nth-child(3) {
+  background: var(--third-color);
+  animation-delay: -0.7s;
+}
+
+.loading span:nth-child(4) {
+  background: var(--fourth-color);
+  animation-delay: -0.6s;
+}
+
+.loading span:nth-child(5) {
+  background: var(--fifth-color);
+  animation-delay: -0.5s;
+}
+
+@keyframes scale {
+  0%,
+  40%,
+  100% {
+    transform: scaleY(0.05);
+  }
+
+  20% {
+    transform: scaleY(1);
+  }
+}
+.loading {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%, -50%);
+}
+.hero {
+  background-image: url("assets/images/fsr_s2.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100%;
+}
+.loading_Container_ {
+  display: grid;
+  place-content: center;
+  height: 100vh;
+}
+/* In your global CSS file (e.g., index.css) */
+html {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.product_card {
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+.addToCart,
+.f_o {
+  visibility: hidden;
+}
+.card_img:hover {
+  .addToCart,
+  .f_o {
+    visibility: visible;
+    transition: 0.7s;
+  }
+}
+.f_o button {
+  font-size: 15px;
+  padding: 6px 10px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  cursor: pointer;
+  &:hover {
+    background-color: black;
+    color: white;
+  }
+}
+.addToCart {
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
