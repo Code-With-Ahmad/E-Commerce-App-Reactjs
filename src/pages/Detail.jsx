@@ -37,7 +37,7 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product, quantity);
-      toast.success("Added to cart!");
+      // toast.success("Added to cart!");
     }
   };
 

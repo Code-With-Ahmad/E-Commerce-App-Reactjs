@@ -39,19 +39,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="loading_Container_">
-        <div className="loading">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <AuthContext.Provider value={{ user, logout }}>

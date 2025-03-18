@@ -43,11 +43,11 @@ const Header = () => {
 
   return (
     <header
-      className={`p-4 w-full bg-white dark:bg-slate-900 text-black dark:text-white shadow-md transition-all duration-200 z-50 ${
+      className={`py-4 w-full bg-white dark:bg-slate-900 text-black dark:text-white shadow-md transition-all duration-200 z-50 ${
         scrolled ? "fixed top-0 left-0 shadow-lg" : "absolute top-0"
       }`}
     >
-      <div className="container mx-auto flex justify-between items-center">
+      <div className="mx-8 flex justify-between items-center">
         <div className="flex items-center">
           <Link to="/home">
             <img
@@ -85,14 +85,14 @@ const Header = () => {
             ))}
           </ul>
         </nav>
-        <div className="hidden lg:flex space-x-6 items-center">
+        <div className="hidden lg:flex space-x-6 justify-center items-center">
           {["home", "shop", "product", "pages", "blog"].map((item) => (
             <NavLink
               key={item}
               to={`/${item}`}
               className={({ isActive }) =>
-                `hover:text-gray-600 dark:hover:text-gray-100 text-1xl relative after:bg-black dark:after:bg-white after:absolute after:h-0.5 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer ${
-                  isActive ? "font-bold" : ""
+                `hover:text-gray-600 dark:hover:text-gray-100 text-md relative after:bg-black dark:after:bg-white after:absolute after:h-0.5 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer ${
+                  isActive ? "font-semibold" : ""
                 }`
               }
             >
@@ -100,7 +100,7 @@ const Header = () => {
             </NavLink>
           ))}
         </div>
-        <div className="flex space-x-6 items-center">
+        <div className="flex space-x-2 justify-end items-center">
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"

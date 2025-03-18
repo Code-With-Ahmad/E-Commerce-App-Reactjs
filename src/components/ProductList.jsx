@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api/api";
 import ProductCard from "../components/ProductCard";
+import Loader from "./UI/Loader";
 
 const ProductList = ({ isCategoryPage }) => {
   console.log(isCategoryPage);
@@ -45,7 +46,7 @@ const ProductList = ({ isCategoryPage }) => {
   });
 
   return (
-    <div className="max-w-screen p-4 dark:bg-slate-900 mt-20">
+    <div className="max-w-screen p-4 dark:bg-slate-900 mt-20 min-h-screen">
       <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">
         {isCategoryPage ? decodeURIComponent(categoryName) : "Product Store"}
       </h1>
@@ -63,17 +64,7 @@ const ProductList = ({ isCategoryPage }) => {
         </select>
       </div>
 
-      {status === "loading" && (
-        <div className="flex justify-center items-center h-40">
-          <div className="loading">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-      )}
+      {status === "loading" && <Loader />}
 
       {status === "failed" && (
         <div className="text-center text-red-500">Error: {error}</div>

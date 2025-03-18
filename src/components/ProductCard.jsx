@@ -26,7 +26,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className="product_card w-100  rounded-3xl   overflow-hidden min-h-[400px] px-4 py-2  ">
+    <div className="product_card w-100  rounded-3xl   overflow-hidden min-h-[400px] px-4 py-2 dark:bg-slate-850">
       <Link to={`/product/${product.id}`} className="block">
         <div className="card_img relative overflow-hidden">
           <img

@@ -19,7 +19,7 @@ import ProductDetail from "./pages/Detail";
 import Cart from "./pages/Cart";
 import Favourite from "./pages/Favourite";
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = ({ element }) => {
   const { user } = useAuth();
   if (user === null && localStorage.getItem("authSession")) {
     return (
@@ -28,17 +28,8 @@ const PrivateRoute = ({ children }) => {
       </div>
     );
   }
-  return user ? children : <Navigate to="/login" replace />;
+  return user ? element : <Navigate to="/login" replace />;
 };
-
-const protectedRoutes = [
-  { path: "home", element: <Home /> },
-  { path: "shop", element: <Shop /> },
-  { path: "category/:categoryName", element: <CategoryPage /> },
-  { path: "product/:id", element: <ProductDetail /> },
-  { path: "cart", element: <Cart /> },
-  { path: "favourite", element: <Favourite /> },
-];
 
 const router = createBrowserRouter([
   {
@@ -46,15 +37,24 @@ const router = createBrowserRouter([
     element: <AppLayout />,
     errorElement: <PageNotFound />,
     children: [
-      { path: "/", element: <Navigate to="/login" replace /> },
-      ...protectedRoutes.map(({ path, element }) => ({
-        path,
-        element: <PrivateRoute>{element}</PrivateRoute>,
-      })),
+      { path: "/", element: <Navigate to="/home" replace /> },
+      { path: "home", element: <PrivateRoute element={<Home />} /> },
+      { path: "shop", element: <PrivateRoute element={<Shop />} /> },
+      {
+        path: "category/:categoryName",
+        element: <PrivateRoute element={<CategoryPage />} />,
+      },
+      {
+        path: "product/:id",
+        element: <PrivateRoute element={<ProductDetail />} />,
+      },
+      { path: "cart", element: <PrivateRoute element={<Cart />} /> },
+      { path: "favourite", element: <PrivateRoute element={<Favourite />} /> },
     ],
   },
   { path: "/login", element: <Login /> },
   { path: "/signup", element: <Register /> },
+  { path: "*", element: <PageNotFound /> },
 ]);
 
 const App = () => (
