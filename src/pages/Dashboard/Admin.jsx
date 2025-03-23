@@ -76,7 +76,7 @@ export default function AdminDashboard() {
             onClick={() => setIsOpen(false)}
           ></div>
           <div className="bg-white rounded-lg shadow-xl w-full  overflow-hidden sm:max-w-lg transform transition-all z-20">
-            <div className="bg-white pb-4 pt-5 px-4 sm:p-6 sm:pb-4">
+            <div className="modal bg-white pb-4 pt-5 px-4 sm:p-6 sm:pb-4">
               {Object.keys(formData).map((key) => (
                 <div key={key}>
                   <label className="text-gray-800 capitalize font-medium">

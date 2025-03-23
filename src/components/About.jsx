@@ -102,7 +102,7 @@ const About = () => {
               <input
                 type="email"
                 placeholder="Enter your email..."
-                className="flex-1 p-2 rounded-full border-2 border-white"
+                className=" flex-1 p-2 rounded-full border-2 border-white"
                 required
               />
               <button
