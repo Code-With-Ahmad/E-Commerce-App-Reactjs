@@ -1,170 +1,186 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { db } from "../firebase/firebase_auth";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import {
   collection,
   query,
   where,
   onSnapshot,
   doc,
+  getDoc,
   setDoc,
   deleteDoc,
+  updateDoc,
 } from "firebase/firestore";
+import { db } from "../firebase/firebase_auth";
 import { useAuth } from "./AuthProvider";
 import { toast } from "react-toastify";
 
 const CartContext = createContext();
 
-const getCachedItems = (key) => {
-  const cached = localStorage.getItem(key);
-  return cached ? JSON.parse(cached) : [];
-};
-
 export const CartProvider = ({ children }) => {
   const { user } = useAuth();
-  const [cartItems, setCartItems] = useState(getCachedItems("cartItems"));
-  const [favorites, setFavorites] = useState(getCachedItems("favorites"));
-  const [cartCount, setCartCount] = useState(cartItems.length);
-  const [favCount, setFavCount] = useState(favorites.length);
+  const [cartItems, setCartItems] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  const [cartCount, setCartCount] = useState(0);
+  const [favCount, setFavCount] = useState(0);
 
   useEffect(() => {
     if (!user) {
-      setCartItems([]);
-      setFavorites([]);
-      setCartCount(0);
-      setFavCount(0);
-      localStorage.removeItem("cartItems");
-      localStorage.removeItem("favorites");
+      const localCart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const localFav = JSON.parse(localStorage.getItem("favorites")) || [];
+      setCartItems(localCart);
+      setFavorites(localFav);
+      setCartCount(localCart.length);
+      setFavCount(localFav.length);
       return;
     }
 
-    // Load from Firestore and sync with localStorage
     const cartQuery = query(
       collection(db, "cart"),
-      where("userId", "==", user.uid)
-    );
-    const unsubscribeCart = onSnapshot(
-      cartQuery,
-      (snapshot) => {
-        const items = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setCartItems(items);
-        setCartCount(items.length);
-        localStorage.setItem("cartItems", JSON.stringify(items));
-      },
-      (error) => {
-        toast.error("Failed to sync cart: " + error.message);
-      }
+      where("userId", "==", user.uid),
+      where("ordered", "==", false)
     );
 
-    const favQuery = query(
-      collection(db, "favorites"),
-      where("userId", "==", user.uid)
-    );
-    const unsubscribeFav = onSnapshot(
-      favQuery,
-      (snapshot) => {
-        const items = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setFavorites(items);
-        setFavCount(items.length);
-        localStorage.setItem("favorites", JSON.stringify(items));
-      },
-      (error) => {
-        toast.error("Failed to sync favorites: " + error.message);
-      }
-    );
+    const unsubscribeCart = onSnapshot(cartQuery, (snapshot) => {
+      const items = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      setCartItems(items);
+      setCartCount(items.length);
+      localStorage.setItem("cartItems", JSON.stringify(items));
+    });
 
     return () => {
       unsubscribeCart();
-      unsubscribeFav();
     };
   }, [user]);
 
-  const addToCart = async (product, quantity) => {
-    if (!user) {
-      toast.error("Please log in to add items to cart");
-      return;
-    }
+  useEffect(() => {
+    const storedFavs = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(storedFavs);
+    setFavCount(storedFavs.length);
+  }, []);
+
+  const addToCart = async (product, quantity = 1) => {
+    if (!user) return toast.error("Please log in to add items to cart");
+    const cartItem = {
+      userId: user.uid,
+      productId: product.id,
+      title: product.title,
+      price: product.price,
+      image: product.image,
+      quantity,
+      ordered: false,
+    };
     try {
-      const cartRef = doc(db, "cart", `${user.uid}_${product.id}`);
-      const item = {
-        userId: user.uid,
-        productId: product.id,
-        title: product.title,
-        price: product.price,
-        image: product.image,
-        quantity,
-        addedAt: new Date().toISOString(),
-      };
-      await setDoc(cartRef, item);
-      // Optimistically update local state
-      const updatedCart = [
-        ...cartItems.filter((i) => i.productId !== product.id),
-        item,
-      ];
-      setCartItems(updatedCart);
-      setCartCount(updatedCart.length);
-      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-      toast.success(`${product.title} added to cart!`);
+      await setDoc(doc(db, "cart", `${user.uid}_${product.id}`), cartItem, {
+        merge: true,
+      });
+      toast.success("Item added to cart!");
     } catch (error) {
       toast.error("Failed to add to cart: " + error.message);
     }
   };
 
   const removeFromCart = async (itemId) => {
+    if (!user) return;
     try {
       await deleteDoc(doc(db, "cart", itemId));
-      const updatedCart = cartItems.filter((item) => item.id !== itemId);
-      setCartItems(updatedCart);
-      setCartCount(updatedCart.length);
-      localStorage.setItem("cartItems", JSON.stringify(updatedCart));
-      toast.success("Item removed from cart");
+      toast.success("Item removed successfully");
     } catch (error) {
-      toast.error("Failed to remove item: " + error.message);
+      toast.error("Failed to remove from cart: " + error.message);
     }
   };
 
   const toggleFavorite = async (product) => {
-    if (!user) {
-      toast.error("Please log in to manage favorites");
-      return;
+    if (!user) return toast.error("Please log in to manage favorites");
+
+    const productId = product.id || product.productId;
+    if (!productId) {
+      return toast.error("Invalid product data. Missing product ID.");
     }
+    const favKey = `${user.uid}_${productId}`;
+    const favRef = doc(db, "favorites", favKey);
+
+    let localFavs = JSON.parse(localStorage.getItem("favorites")) || [];
+    const favExists = localFavs.some((fav) => fav.productId === productId);
+
     try {
-      const favRef = doc(db, "favorites", `${user.uid}_${product.id}`);
-      const isCurrentlyFavorite = favorites.some(
-        (item) => item.productId === product.id
-      );
-      if (isCurrentlyFavorite) {
+      if (favExists) {
         await deleteDoc(favRef);
-        const updatedFavorites = favorites.filter(
-          (item) => item.productId !== product.id
-        );
-        setFavorites(updatedFavorites);
-        setFavCount(updatedFavorites.length);
-        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-        toast.success(`${product.title} removed from favorites`);
+
+        localFavs = localFavs.filter((fav) => fav.productId !== productId);
+        localStorage.setItem("favorites", JSON.stringify(localFavs));
+        setFavorites(localFavs);
+        setFavCount(localFavs.length);
+        toast.success("Removed from favorites!");
       } else {
-        const item = {
-          userId: user.uid,
-          productId: product.id,
-          title: product.title,
-          price: product.price,
-          image: product.image,
-          addedAt: new Date().toISOString(),
-        };
-        await setDoc(favRef, item);
-        const updatedFavorites = [...favorites, item];
-        setFavorites(updatedFavorites);
-        setFavCount(updatedFavorites.length);
-        localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-        toast.success(`${product.title} added to favorites`);
+        const favData = { ...product, userId: user.uid, productId };
+
+        await setDoc(favRef, favData);
+
+        localFavs.push(favData);
+        localStorage.setItem("favorites", JSON.stringify(localFavs));
+        setFavorites(localFavs);
+        setFavCount(localFavs.length);
+        toast.success("Added to favorites!");
       }
     } catch (error) {
-      toast.error("Failed to update favorites: " + error.message);
+      toast.error("Failed to update favorite: " + error.message);
+    }
+  };
+
+  const generateOrderId = async () => {
+    let orderId = "";
+    let exists = true;
+    while (exists) {
+      orderId = Math.floor(100000 + Math.random() * 900000).toString(); //
+      const orderRef = doc(db, "orders", orderId);
+      const orderSnap = await getDoc(orderRef);
+      exists = orderSnap.exists();
+    }
+    return orderId;
+  };
+
+  const checkoutCart = async () => {
+    if (!user) return toast.error("Please log in to proceed with checkout.");
+    if (cartItems.length === 0)
+      return toast.error("Your cart is already empty.");
+    try {
+      const subtotal = cartItems.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+      const gst = 10;
+      const shipping = subtotal * 0.1;
+      const totalAmount = subtotal + gst + shipping;
+
+      const orderId = await generateOrderId();
+      const orderData = {
+        userId: user.uid,
+        items: cartItems,
+        subtotal: subtotal.toFixed(2),
+        gst: gst.toFixed(2),
+        shipping: shipping.toFixed(2),
+        total: totalAmount.toFixed(2),
+        totalPrice: totalAmount.toFixed(2),
+        orderDate: new Date().toLocaleDateString(),
+        orderTime: new Date().toLocaleTimeString(),
+        userEmail: user.email,
+      };
+      await setDoc(doc(db, "orders", orderId), orderData);
+
+      for (let item of cartItems) {
+        const itemRef = doc(db, "cart", item.id);
+        await updateDoc(itemRef, {
+          ordered: true,
+          orderTime: new Date().toISOString(),
+        });
+      }
+
+      localStorage.removeItem("cartItems");
+      setCartItems([]);
+      setCartCount(0);
+      toast.success("Your Order is placed successfully!");
+    } catch (error) {
+      toast.error("Checkout failed: " + error.message);
     }
   };
 
@@ -172,12 +188,14 @@ export const CartProvider = ({ children }) => {
     <CartContext.Provider
       value={{
         cartItems,
-        favorites,
-        cartCount,
-        favCount,
+        setCartItems,
         addToCart,
         removeFromCart,
+        favorites,
         toggleFavorite,
+        cartCount,
+        favCount,
+        checkoutCart,
       }}
     >
       {children}

@@ -1,36 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import api from "../api/api";
+import { useProducts } from "../context/ProductProvider";
 import ProductCard from "../components/ProductCard";
 import Loader from "./UI/Loader";
 
 const ProductList = ({ isCategoryPage }) => {
-  console.log(isCategoryPage);
-
   const { categoryName } = useParams();
-  const [products, setProducts] = useState([]);
-  const [status, setStatus] = useState("idle");
-  const [error, setError] = useState(null);
+  const { products, status, error } = useProducts();
   const [sortOrder, setSortOrder] = useState("default");
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setStatus("loading");
-      try {
-        const response = await api.get("/products");
-        setProducts(response.data);
-        setStatus("succeeded");
-      } catch (err) {
-        setError(err.message);
-        setStatus("failed");
-      }
-    };
-
-    fetchProducts();
-  }, []);
-
   let filteredProducts = products;
-
   if (isCategoryPage && categoryName) {
     filteredProducts = products.filter(
       (product) =>
@@ -46,15 +25,15 @@ const ProductList = ({ isCategoryPage }) => {
   });
 
   return (
-    <div className="max-w-screen p-4 dark:bg-slate-900 mt-20 min-h-screen">
-      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">
+    <div className="p-4 dark:bg-slate-900 max-w-screen min-h-screen mt-20">
+      <h1 className="text-4xl text-center dark:text-white font-bold mb-8">
         {isCategoryPage ? decodeURIComponent(categoryName) : "Product Store"}
       </h1>
 
-      <div className="mb-8 text-end">
-        <label className="mr-2 font-bold dark:text-white">Sort by Price:</label>
+      <div className="text-end mb-8">
+        <label className="dark:text-white font-bold mr-2">Sort by Price:</label>
         <select
-          className="border px-2 py-1 rounded dark:bg-slate-800 dark:text-white"
+          className="border rounded dark:bg-slate-800 dark:text-white px-2 py-1"
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
         >
@@ -65,13 +44,11 @@ const ProductList = ({ isCategoryPage }) => {
       </div>
 
       {status === "loading" && <Loader />}
-
       {status === "failed" && (
         <div className="text-center text-red-500">Error: {error}</div>
       )}
-
       {status === "succeeded" && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5 mx-auto w-[80vw]">
+        <div className="grid grid-cols-1 w-[80vw] gap-5 lg:grid-cols-2 mx-auto xl:grid-cols-3">
           {sortedProducts.map((product) => (
             <div className="flex justify-center" key={product.id}>
               <ProductCard product={product} />
@@ -79,7 +56,6 @@ const ProductList = ({ isCategoryPage }) => {
           ))}
         </div>
       )}
-
       {status === "succeeded" && sortedProducts.length === 0 && (
         <div className="text-center text-xl dark:text-white">
           No products found {isCategoryPage ? "in this category" : ""}

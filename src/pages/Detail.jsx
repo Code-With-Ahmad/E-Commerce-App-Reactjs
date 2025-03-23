@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../api/api";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase_auth";
 import { useCart } from "../context/CartProvider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
@@ -20,10 +21,15 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       setStatus("loading");
       try {
-        const response = await api.get(`/products/${id}`);
-        setProduct(response.data);
-        setIsFavorite(favorites.some((fav) => fav.productId === id));
-        setStatus("succeeded");
+        const productRef = doc(db, "products", id);
+        const productSnap = await getDoc(productRef);
+        if (productSnap.exists()) {
+          setProduct({ id: productSnap.id, ...productSnap.data() });
+          setIsFavorite(favorites.some((fav) => fav.productId === id));
+          setStatus("succeeded");
+        } else {
+          throw new Error("Product not found");
+        }
       } catch (err) {
         setError(err.message);
         setStatus("failed");
@@ -37,7 +43,6 @@ const ProductDetail = () => {
   const handleAddToCart = () => {
     if (product) {
       addToCart(product, quantity);
-      // toast.success("Added to cart!");
     }
   };
 

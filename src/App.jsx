@@ -18,17 +18,32 @@ import CategoryPage from "./pages/Category";
 import ProductDetail from "./pages/Detail";
 import Cart from "./pages/Cart";
 import Favourite from "./pages/Favourite";
+import Admin from "./pages/Dashboard/Admin";
+import { useAdmin } from "./context/AdminProvider";
+
 
 const PrivateRoute = ({ element }) => {
   const { user } = useAuth();
   if (user === null && localStorage.getItem("authSession")) {
     return (
       <div className="loading_Container">
-        <div className="loading">{Array(5).fill(<span></span>)}</div>
+        <div className="loading">
+          {Array(5)
+            .fill(null)
+            .map((_, index) => (
+              <span key={index}></span>
+            ))}
+        </div>
       </div>
     );
   }
   return user ? element : <Navigate to="/login" replace />;
+};
+
+
+const PrivateAdminRoute = ({ element }) => {
+  const { isAdmin } = useAdmin();
+  return isAdmin ? element : <Navigate to="/home" replace />;
 };
 
 const router = createBrowserRouter([
@@ -40,6 +55,8 @@ const router = createBrowserRouter([
       { path: "/", element: <Navigate to="/home" replace /> },
       { path: "home", element: <PrivateRoute element={<Home />} /> },
       { path: "shop", element: <PrivateRoute element={<Shop />} /> },
+    
+      { path: "admin", element: <PrivateAdminRoute element={<Admin />} /> },
       {
         path: "category/:categoryName",
         element: <PrivateRoute element={<CategoryPage />} />,

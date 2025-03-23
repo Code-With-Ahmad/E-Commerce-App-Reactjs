@@ -1,15 +1,36 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../context/CartProvider";
 import { useAuth } from "../context/AuthProvider";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Favourite = () => {
   const { user } = useAuth();
   const { favorites, toggleFavorite } = useCart();
+  const [localFavorites, setLocalFavorites] = useState([]);
+
+ 
+  useEffect(() => {
+    const storedFavs = JSON.parse(localStorage.getItem("favorites")) || [];
+    setLocalFavorites(storedFavs);
+  }, [favorites]);
+
+  const handleToggleFavorite = async (product) => {
+    if (!user) {
+      toast.error("Please log in to manage favorites.");
+      return;
+    }
+    try {
+     
+      await toggleFavorite(product);
+    } catch (error) {
+      toast.error("Failed to update favorite: " + error.message);
+    }
+  };
 
   return (
-    <div className="container mx-auto p-4  mt-30 dark:bg-slate-900 min-h-[40vh]">
-      <h1 className="text-4xl font-bold text-center mb-8 dark:text-white">
+    <div className="container p-4 dark:bg-slate-900 min-h-[40vh] mt-30 mx-auto">
+      <h1 className="text-4xl text-center dark:text-white font-bold mb-8">
         Your Favorites
       </h1>
       {!user && (
@@ -17,28 +38,28 @@ const Favourite = () => {
           Please log in to view your favorites.
         </p>
       )}
-      {user && favorites.length === 0 && (
+      {user && localFavorites.length === 0 && (
         <p className="text-center dark:text-white">
           You have no favorites yet.
         </p>
       )}
-      {user && favorites.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 ">
-          {favorites.map((item) => (
+      {user && localFavorites.length > 0 && (
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 sm:grid-cols-2">
+          {localFavorites.map((item) => (
             <div
-              key={item.id}
-              className="bg-white dark:bg-slate-800 p-4 rounded-lg shadow-lg "
+              key={item.productId}
+              className="bg-white p-4 rounded-lg shadow-lg dark:bg-slate-800"
             >
               <Link to={`/product/${item.productId}`}>
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-64 object-contain rounded mix-blend-multiply "
+                  className="h-64 rounded w-full object-contain"
                 />
-                <h2 className="text-md font-semibold mt-2 dark:text-white">
+                <h2 className="text-md dark:text-white font-semibold mt-2">
                   {item.title}
                 </h2>
-                <p className="text-gray-600 font-semibold dark:text-gray-300 ">
+                <p className="text-gray-600 dark:text-gray-300 font-semibold">
                   ${item.price}
                 </p>
               </Link>
@@ -50,9 +71,9 @@ const Favourite = () => {
                     price: item.price,
                     image: item.image,
                   };
-                  toggleFavorite(product);
+                  handleToggleFavorite(product);
                 }}
-                className="mt-2 w-full py-1 px-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                className="bg-red-600 rounded-lg text-white w-full hover:bg-red-700 mt-2 px-3 py-1 transition-colors"
               >
                 Remove
               </button>

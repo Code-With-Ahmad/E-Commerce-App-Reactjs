@@ -13,6 +13,7 @@ import {
 import { useTheme } from "../context/ThemeProvider";
 import { useAuth } from "../context/AuthProvider";
 import { useCart } from "../context/CartProvider";
+import { useAdmin } from "../context/AdminProvider";
 import { toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
@@ -21,6 +22,7 @@ const Header = () => {
   const { theme, toggleTheme } = useTheme();
   const { user, logout } = useAuth();
   const { cartCount, favCount } = useCart();
+  const { isAdmin } = useAdmin();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -28,6 +30,7 @@ const Header = () => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 30);
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -36,10 +39,17 @@ const Header = () => {
     try {
       await logout();
       toast.success("You have logged out successfully", { autoClose: 2000 });
+      window.location.reload();
     } catch (error) {
       toast.error("Logout failed: " + error.message);
     }
   };
+
+  // Define mobile menu items, adding 'admin' if user is admin.
+  const mobileMenuItems = ["home", "shop", "product", "pages", "blog"];
+  if (isAdmin) {
+    mobileMenuItems.push("admin");
+  }
 
   return (
     <header
@@ -69,7 +79,7 @@ const Header = () => {
             <FontAwesomeIcon icon={faTimes} />
           </button>
           <ul className="flex flex-col space-y-6">
-            {["home", "shop", "product", "pages", "blog"].map((item) => (
+            {mobileMenuItems.map((item) => (
               <li key={item}>
                 <NavLink
                   to={`/${item}`}
@@ -78,6 +88,7 @@ const Header = () => {
                       isActive ? "font-bold" : ""
                     }`
                   }
+                  onClick={() => setMenuOpen(false)}
                 >
                   {item.charAt(0).toUpperCase() + item.slice(1)}
                 </NavLink>
@@ -99,6 +110,18 @@ const Header = () => {
               {item.charAt(0).toUpperCase() + item.slice(1)}
             </NavLink>
           ))}
+          {isAdmin && (
+            <NavLink
+              to={"/admin"}
+              className={({ isActive }) =>
+                `hover:text-gray-600 dark:hover:text-gray-100 text-md relative after:bg-black dark:after:bg-white after:absolute after:h-0.5 after:w-0 after:bottom-0 after:left-0 hover:after:w-full after:transition-all after:duration-300 cursor-pointer ${
+                  isActive ? "font-semibold" : ""
+                }`
+              }
+            >
+              Admin
+            </NavLink>
+          )}
         </div>
         <div className="flex space-x-2 justify-end items-center">
           <button
