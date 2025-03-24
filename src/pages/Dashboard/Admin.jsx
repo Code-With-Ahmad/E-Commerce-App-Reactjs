@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import logo from "../../assets/images/logo_white.png";
@@ -43,9 +43,10 @@ export default function AdminDashboard() {
     description: "",
     category: "",
   });
-
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState(0);
+
+  const searchInputRef = useRef(null);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -55,8 +56,15 @@ export default function AdminDashboard() {
 
     if (foundProduct) {
       setSelectedTab(1);
+      // Reassign focus after tab switch
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 0);
     }
   };
+
   const handleLogout = async () => {
     try {
       await logout();
@@ -68,14 +76,14 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="bg-[#FFFFFF] min-h-screen w-screen dark:text-black  overflow-hidden px-4 dark:bg-slate-900 dark:text-white">
+    <div className="bg-[#FFFFFF] min-h-screen w-screen dark:text-black overflow-hidden px-4 dark:bg-slate-900 dark:text-white">
       {isOpen && (
         <div className="flex justify-center fixed inset-0 items-center overflow-y-auto z-10">
           <div
             className="bg-gray-900 fixed inset-0 opacity-75"
             onClick={() => setIsOpen(false)}
           ></div>
-          <div className="bg-white rounded-lg shadow-xl w-full  overflow-hidden sm:max-w-lg transform transition-all z-20">
+          <div className="bg-white rounded-lg shadow-xl w-full overflow-hidden sm:max-w-lg transform transition-all z-20">
             <div className="modal bg-white pb-4 pt-5 px-4 sm:p-6 sm:pb-4">
               {Object.keys(formData).map((key) => (
                 <div key={key}>
@@ -142,14 +150,15 @@ export default function AdminDashboard() {
           <Link to={"/home"}>
             <img
               src={logo}
-              alt=""
-              className="dark:invert-0 invert-100 w-[150px] h-[30px]  items-center"
+              alt="logo"
+              className="dark:invert-0 invert-100 w-[150px] h-[30px] items-center"
             />
           </Link>
 
           <div className="flex bg-[#F5F5F5] rounded-md text-black gap-3 items-center px-2 py-[5px]">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
             <input
+              ref={searchInputRef}
               type="text"
               placeholder="Search Your Products"
               value={searchQuery}
