@@ -21,8 +21,8 @@ const ProductAdmin = ({ searchQuery }) => {
   // Default dropdown options.
   const defaultCategories = [
     "jewelery",
-    "mens clothing",
-    "womens clothing",
+    "men's clothing",
+    "women's clothing",
     "electronics",
   ];
 

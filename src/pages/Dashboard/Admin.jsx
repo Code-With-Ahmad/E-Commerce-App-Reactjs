@@ -441,7 +441,7 @@ export default function AdminDashboard() {
         <div className="flex items-center gap-10 w-full lg:w-auto">
           {/* Hamburger Menu Button */}
           <button
-            className="lg:hidden text-2xl"
+            className="lg:hidden text-2xl cursor-pointer"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} />
@@ -457,7 +457,7 @@ export default function AdminDashboard() {
           </Link>
 
           {/* Search Box */}
-          <div className="bg-gray-100 rounded-md text-black flex gap-3 items-center px-3 py-2 relative w-[40%] lg:w-[220%]">
+          <div className="bg-gray-100 rounded-md text-black flex gap-3 items-center px-3 py-2 relative w-[60%] lg:w-[220%]">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
             <input
               ref={searchInputRef}
@@ -524,7 +524,7 @@ export default function AdminDashboard() {
         >
           {/* Close Button */}
           <button
-            className="lg:hidden absolute top-4 right-4 text-lg mb-12"
+            className="lg:hidden absolute top-4 right-4 text-lg mb-12 cursor-pointer"
             onClick={() => setMenuOpen(false)}
           >
             <FontAwesomeIcon icon={faTimes} />
@@ -660,9 +660,9 @@ export default function AdminDashboard() {
               </div>
             ))}
             <datalist id="categories">
-              <option value="mens clothing" />
+              <option value="men's clothing" />
               <option value="jewelery" />
-              <option value="womens clothing" />
+              <option value="women's clothing" />
               <option value="electronics" />
             </datalist>
             <div className="flex justify-end mt-4">

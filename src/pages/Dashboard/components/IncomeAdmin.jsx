@@ -38,7 +38,9 @@ const IncomeAdmin = () => {
           <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
         </div>
       ) : orders.length === 0 ? (
-        <p>No completed orders found.</p>
+        <p className="absolute text-center top-[50%] left-[50%]">
+          No completed orders found.
+        </p>
       ) : (
         <table className="min-w-full bg-white ">
           <thead className="bg-gray-300">
