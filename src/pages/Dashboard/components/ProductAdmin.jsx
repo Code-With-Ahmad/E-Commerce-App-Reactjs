@@ -253,7 +253,9 @@ const ProductAdmin = ({ searchQuery }) => {
                 </div>
               ))
             ) : (
-              <p className="text-center text-gray-500">No products found.</p>
+              <p className="text-center text-gray-500 absolute top-[50%] left-[50%]">
+                No products found.
+              </p>
             )}
           </div>
         )}

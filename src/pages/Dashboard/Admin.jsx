@@ -613,21 +613,58 @@ export default function AdminDashboard() {
                 <label className="block text-gray-800 capitalize font-medium mb-1">
                   {key}
                 </label>
-                <input
-                  type={key === "price" ? "number" : "text"}
-                  name={key}
-                  value={formData[key]}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      [e.target.name]: e.target.value,
-                    })
-                  }
-                  className="bg-gray-100 p-2 text-black rounded w-full outline-none"
-                  required
-                />
+                {key === "description" ? (
+                  <textarea
+                    name={key}
+                    value={formData[key]}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        [e.target.name]: e.target.value,
+                      })
+                    }
+                    className="bg-gray-100 p-2 text-black rounded w-full outline-none hide-scrollbar resize-y"
+                    rows="4"
+                    style={{ height: "100px", overflowY: "scroll" }}
+                  />
+                ) : key === "category" ? (
+                  <input
+                    type="text"
+                    name={key}
+                    value={formData[key]}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        [e.target.name]: e.target.value,
+                      })
+                    }
+                    list="categories"
+                    className="bg-gray-100 p-2 text-black rounded w-full outline-none"
+                    required
+                  />
+                ) : (
+                  <input
+                    type={key === "price" ? "number" : "text"}
+                    name={key}
+                    value={formData[key]}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        [e.target.name]: e.target.value,
+                      })
+                    }
+                    className="bg-gray-100 p-2 text-black rounded w-full outline-none"
+                    required
+                  />
+                )}
               </div>
             ))}
+            <datalist id="categories">
+              <option value="mens clothing" />
+              <option value="jewelery" />
+              <option value="womens clothing" />
+              <option value="electronics" />
+            </datalist>
             <div className="flex justify-end mt-4">
               <button
                 className="bg-gray-500 rounded text-white hover:bg-gray-700 mr-2 px-4 py-2"
