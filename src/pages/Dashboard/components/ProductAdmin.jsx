@@ -9,6 +9,8 @@ import { FaTrashAlt } from "react-icons/fa";
 // import pencil from "../../../assets/images/pencil.png";
 import MyIcon from "../../../assets/images/pencil.svg";
 import PencilIcon from "../../../components/UI/PencilIcon";
+import TrashBinIcon from "../../../components/UI/TrashBinIcon";
+
 const ProductAdmin = ({ searchQuery }) => {
   const { products, status, error, removeProduct, updateProduct } =
     useProducts();
@@ -168,7 +170,7 @@ const ProductAdmin = ({ searchQuery }) => {
                     <h2 className="text-md font-semibold">{item.title}</h2>
                     <p className="font-semibold">${item.price}</p>
                   </div>
-                  <div className="ps-4 flex items-center gap-5">
+                  <div className="ps-4 flex items-center gap-2">
                     <button
                       className="cursor-pointer"
                       onClick={() => {
@@ -180,20 +182,9 @@ const ProductAdmin = ({ searchQuery }) => {
                         icon={faPen}
                         className="text-2xl border-2 border-blue-600 hover:border-blue-500 p-1 rounded"
                       /> */}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="black"
-                        stroke="#7782ed"
-                        strokeWidth="2"
-                        strokeLinejoin="round"
-                        strokeLinecap="round"
-                        className="w-8 h-8"
-                      >
-                        <path d="M7.127 22.562l-7.127 1.438 1.438-7.128 5.689 5.69zm1.414-1.414l11.228-11.225-5.69-5.692-11.227 11.227 5.689 5.69zm9.768-21.148l-2.816 2.817 5.691 5.691 2.816-2.819-5.691-5.689z" />
-                      </svg>
+
+                      {/* Pen Icon Here */}
+                      <PencilIcon />
                     </button>
                     {/* <button
                       className="bg-green-500 rounded text-white cursor-pointer hover:bg-green-400 ml-4 px-3 py-1"
@@ -211,44 +202,7 @@ const ProductAdmin = ({ searchQuery }) => {
                       onClick={() => removeProduct(item.id)}
                       className="cursor-pointer "
                     >
-                      <svg
-                        className="h-8 w-8"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M6 6V19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V6"
-                          fill="black"
-                          stroke="red"
-                          stroke-width="1.5"
-                          stroke-linejoin="round"
-                        />
-                        <path
-                          d="M3 6H21"
-                          stroke="red"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                        />
-                        <path
-                          d="M10 11V17"
-                          stroke="red"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                        />
-                        <path
-                          d="M14 11V17"
-                          stroke="red"
-                          stroke-width="1.5"
-                          stroke-linecap="round"
-                        />
-                        <path
-                          d="M8 6V4C8 3.45 8.45 3 9 3H15C15.55 3 16 3.45 16 4V6"
-                          stroke="red"
-                          stroke-width="1.5"
-                          stroke-linejoin="round"
-                        />
-                      </svg>
+                      <TrashBinIcon />
                     </button>
                     {/* <button
                       onClick={() => removeProduct(item.id)}

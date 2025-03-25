@@ -563,12 +563,10 @@ export default function AdminDashboard() {
         {/* MAIN CONTENT as TabPanels */}
         <div className="flex flex-col w-full lg:w-[90%] h-full bg-white">
           <TabPanel>
-            <div className="flex items-center justify-center h-full">
-              <Home />
-            </div>
+            <Home />
           </TabPanel>
           <TabPanel>
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-full ">
               <ProductAdmin searchQuery={searchQuery} />
             </div>
           </TabPanel>
@@ -583,7 +581,7 @@ export default function AdminDashboard() {
             </div>
           </TabPanel>
           <TabPanel>
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-full mt-10">
               <IncomeAdmin />
             </div>
           </TabPanel>
