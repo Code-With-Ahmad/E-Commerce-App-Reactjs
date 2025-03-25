@@ -53,8 +53,8 @@ const Header = () => {
 
   return (
     <header
-      className={`py-4 w-full bg-white dark:bg-slate-900 text-black dark:text-white shadow-md transition-all duration-200 z-50 ${
-        scrolled ? "fixed top-0 left-0 shadow-lg" : "absolute top-0"
+      className={`py-4 w-screen overflow-x-hidden bg-white dark:bg-slate-900 text-black dark:text-white shadow-md transition-all duration-200 z-10 ${
+        scrolled ? "fixed top-0 left-0 d shadow-lg" : "sticky top-0"
       }`}
     >
       <div className="mx-8 flex justify-between items-center">

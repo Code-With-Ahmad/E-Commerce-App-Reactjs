@@ -73,7 +73,7 @@ export const CartProvider = ({ children }) => {
       await setDoc(doc(db, "cart", `${user.uid}_${product.id}`), cartItem, {
         merge: true,
       });
-      toast.success("Item added to cart!");
+      // toast.success("Item added to cart!");
     } catch (error) {
       toast.error("Failed to add to cart: " + error.message);
     }
@@ -83,7 +83,7 @@ export const CartProvider = ({ children }) => {
     if (!user) return;
     try {
       await deleteDoc(doc(db, "cart", itemId));
-      toast.success("Item removed successfully");
+      // toast.success("Item removed successfully");
     } catch (error) {
       toast.error("Failed to remove from cart: " + error.message);
     }
@@ -120,7 +120,7 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem("favorites", JSON.stringify(localFavs));
         setFavorites(localFavs);
         setFavCount(localFavs.length);
-        toast.success("Added to favorites!");
+        // toast.success("Added to favorites!");
       }
     } catch (error) {
       toast.error("Failed to update favorite: " + error.message);
@@ -178,7 +178,7 @@ export const CartProvider = ({ children }) => {
       localStorage.removeItem("cartItems");
       setCartItems([]);
       setCartCount(0);
-      toast.success("Your Order is placed successfully!");
+      // toast.success("Your Order is placed successfully!");
     } catch (error) {
       toast.error("Checkout failed: " + error.message);
     }

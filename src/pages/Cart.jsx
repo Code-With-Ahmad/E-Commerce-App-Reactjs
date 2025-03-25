@@ -32,14 +32,14 @@ const Cart = () => {
   const { subtotal, shipping, gst, total } = calculateTotal();
 
   const handleCheckout = async () => {
-    if (isCheckingOut) return; 
+    if (isCheckingOut) return;
     setIsCheckingOut(true);
     try {
       await checkoutCart();
-      toast.success("Your Order is placed.");
+      // toast.success("Your Order is placed.");
     } catch (error) {
       toast.error("Checkout failed. Try again.");
-      setIsCheckingOut(false); 
+      setIsCheckingOut(false);
     }
   };
 

@@ -1,6 +1,328 @@
-import { useState, useRef } from "react";
+// import React, { useState, useRef, useEffect } from "react";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+// import { Link } from "react-router-dom";
+// import { toast, ToastContainer } from "react-toastify";
+// import logo from "../../assets/images/logo_white.png";
+// import {
+//   faMagnifyingGlass,
+//   faPlus,
+//   faBell,
+//   faPencil,
+//   faUser,
+//   faHouse,
+//   faList,
+//   faUserGroup,
+//   faGift,
+//   faWallet,
+//   faBullhorn,
+//   faArrowRightFromBracket,
+//   faCircleInfo,
+//   faMoon,
+//   faSun,
+//   faBars,
+//   faTimes,
+// } from "@fortawesome/free-solid-svg-icons";
+// import { useTheme } from "../../context/ThemeProvider";
+// import { useAuth } from "../../context/AuthProvider";
+// import { useProducts } from "../../context/ProductProvider";
+// import Home from "./components/HomeAdmin";
+// import ProductAdmin from "./components/ProductAdmin";
+// import CustomersAdmin from "./components/CustomersAdmin";
+// import ShopAdmin from "./components/ShopAdmin";
+// import IncomeAdmin from "./components/IncomeAdmin";
+// import PromoteAdmin from "./components/PromoteAdmin";
+
+// export default function AdminDashboard() {
+//   const { theme, toggleTheme } = useTheme();
+//   const { logout } = useAuth();
+//   const { addProduct, products } = useProducts();
+
+//   const [menuOpen, setMenuOpen] = useState(false);
+//   const [searchQuery, setSearchQuery] = useState("");
+//   const [selectedTab, setSelectedTab] = useState(0);
+//   const searchInputRef = useRef(null);
+
+//   // Modal state and form data for modal inputs
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [formData, setFormData] = useState({
+//     title: "",
+//     image: "",
+//     price: "",
+//     description: "",
+//     category: "",
+//   });
+
+//   // Keep focus on search input when switching to "Products" tab
+//   useEffect(() => {
+//     if (selectedTab === 1 && searchInputRef.current) {
+//       searchInputRef.current.focus();
+//     }
+//   }, [selectedTab]);
+
+//   const handleSearch = (e) => {
+//     const query = e.target.value.toLowerCase();
+//     setSearchQuery(query);
+//     // Automatically switch to "Products" tab when typing
+//     if (query.length > 0) {
+//       setSelectedTab(1);
+//     }
+//   };
+
+//   const handleTabClick = (index) => {
+//     setSelectedTab(index);
+//     setMenuOpen(false);
+//   };
+
+//   const handleLogout = async () => {
+//     try {
+//       await logout();
+//       toast.success("You have logged out successfully", { autoClose: 2000 });
+//       window.location.reload();
+//     } catch (error) {
+//       toast.error("Logout failed: " + error.message);
+//     }
+//   };
+
+//   // Handler for creating a new product using the modal
+//   const handleCreate = async () => {
+//     if (Object.values(formData).some((value) => !value)) {
+//       toast.error("Please fill all fields");
+//       return;
+//     }
+//     try {
+//       await addProduct({
+//         ...formData,
+//         id: String(products.length + 1),
+//         price: parseFloat(formData.price),
+//         rating: {
+//           count: Math.floor(Math.random() * 200) + 1,
+//           rate: (Math.random() * 5).toFixed(1),
+//         },
+//       });
+//     } catch (err) {
+//       console.error("Error adding product:", err);
+//       toast.error("Error adding product");
+//     }
+//     setIsModalOpen(false);
+//     setFormData({
+//       title: "",
+//       image: "",
+//       price: "",
+//       description: "",
+//       category: "",
+//     });
+//   };
+
+//   return (
+//     <div className="h-screen w-screen bg-white dark:bg-slate-900 dark:text-white overflow-hidden flex flex-col">
+//       {/* HEADER */}
+//       <header className="flex justify-between items-center py-4 px-4 bg-white dark:bg-slate-800">
+//         {/* Left Section: Logo & Search */}
+//         <div className="flex items-center gap-10 w-full lg:w-auto">
+//           {/* Hamburger Menu Button */}
+//           <button
+//             className="lg:hidden text-2xl"
+//             onClick={() => setMenuOpen(!menuOpen)}
+//           >
+//             <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} />
+//           </button>
+
+//           {/* Logo (Hidden on md and smaller devices) */}
+//           <Link to="/home" className="hidden lg:block">
+//             <img src={logo} alt="logo" className="w-[320px] h-[20px]" />
+//           </Link>
+
+//           {/* Search Box */}
+//           <div className="bg-gray-100 rounded-md text-black flex gap-3 items-center px-3 py-2 relative w-[40%] lg:w-[250%]">
+//             <FontAwesomeIcon icon={faMagnifyingGlass} />
+//             <input
+//               ref={searchInputRef}
+//               type="text"
+//               placeholder="Search Your Products"
+//               value={searchQuery}
+//               onChange={handleSearch}
+//               className="bg-transparent border-0 w-full outline-none"
+//             />
+//             {searchQuery && (
+//               <button
+//                 onClick={() => setSearchQuery("")}
+//                 className="absolute right-2 text-gray-500 hover:text-gray-700"
+//               >
+//                 <FontAwesomeIcon icon={faTimes} />
+//               </button>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Right Section: Icons */}
+//         <div className="flex gap-4 items-center">
+//           <button
+//             className="flex bg-blue-500 items-center cursor-pointer text-white px-4 py-2 rounded-md"
+//             onClick={() => setIsModalOpen(true)}
+//           >
+//             <FontAwesomeIcon icon={faPlus} />
+//             <span className="ml-2 font-semibold hidden md:inline-block">
+//               Create
+//             </span>
+//           </button>
+//           <FontAwesomeIcon
+//             icon={faBell}
+//             className="text-2xl cursor-pointer hidden lg:block"
+//           />
+//           <FontAwesomeIcon
+//             icon={faPencil}
+//             className="text-2xl cursor-pointer hidden lg:block"
+//           />
+//           <FontAwesomeIcon
+//             icon={faUser}
+//             className="text-2xl cursor-pointer hidden lg:block"
+//           />
+//           <button
+//             onClick={toggleTheme}
+//             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+//           >
+//             <FontAwesomeIcon icon={theme === "light" ? faMoon : faSun} />
+//           </button>
+//         </div>
+//       </header>
+
+//       {/* Tabs Wrapper */}
+//       <Tabs
+//         selectedIndex={selectedTab}
+//         onSelect={handleTabClick}
+//         className="flex flex-grow"
+//       >
+//         {/* SIDEBAR */}
+//         <div
+//           className={`fixed top-0 left-0 h-full bg-white dark:bg-slate-900 shadow-md transition-all ${
+//             menuOpen ? "w-2/3" : "w-0"
+//           } overflow-hidden lg:w-[10%] lg:static flex flex-col justify-between`}
+//         >
+//           {/* Close Button */}
+//           <button
+//             className="lg:hidden absolute top-4 right-4 text-lg mb-12"
+//             onClick={() => setMenuOpen(false)}
+//           >
+//             <FontAwesomeIcon icon={faTimes} />
+//           </button>
+
+//           {/* Sidebar Tabs */}
+//           <TabList className="space-y-3 flex-grow mt-16">
+//             {[
+//               { icon: faHouse, label: "Home" },
+//               { icon: faList, label: "Products" },
+//               { icon: faUserGroup, label: "Orders" },
+//               { icon: faGift, label: "Shop" },
+//               { icon: faWallet, label: "Income" },
+//               { icon: faBullhorn, label: "Promote" },
+//             ].map((tab, index) => (
+//               <Tab
+//                 key={index}
+//                 className="flex gap-4 items-center cursor-pointer px-2 py-2"
+//                 onClick={() => handleTabClick(index)}
+//               >
+//                 <FontAwesomeIcon icon={tab.icon} /> {tab.label}
+//               </Tab>
+//             ))}
+//           </TabList>
+
+//           {/* Help & Logout */}
+//           <ul className="p-4 space-y-3 border-t border-gray-200 dark:border-gray-700">
+//             <li className="flex gap-4 items-center cursor-pointer px-2">
+//               <FontAwesomeIcon icon={faCircleInfo} /> Help
+//             </li>
+//             <li
+//               className="flex gap-4 items-center cursor-pointer px-2 text-red-600"
+//               onClick={handleLogout}
+//             >
+//               <FontAwesomeIcon icon={faArrowRightFromBracket} /> Logout
+//             </li>
+//           </ul>
+//         </div>
+
+//         {/* MAIN CONTENT as TabPanels */}
+//         <div className="flex flex-col w-full lg:w-[90%] h-full bg-white">
+//           <TabPanel>
+//             <Home />
+//           </TabPanel>
+//           <TabPanel>
+//             <ProductAdmin searchQuery={searchQuery} />
+//           </TabPanel>
+//           <TabPanel>
+//             <CustomersAdmin />
+//           </TabPanel>
+//           <TabPanel>
+//             <ShopAdmin />
+//           </TabPanel>
+//           <TabPanel>
+//             <IncomeAdmin />
+//           </TabPanel>
+//           <TabPanel>
+//             <PromoteAdmin />
+//           </TabPanel>
+//         </div>
+//       </Tabs>
+
+//       {/* Modal: Hidden by default, absolute, centered, with high z-index */}
+//       {isModalOpen && (
+//         <div className="absolute inset-0 flex items-center justify-center z-50">
+//           {/* Overlay */}
+//           <div
+//             className="fixed inset-0 bg-gray-900 opacity-75"
+//             onClick={() => setIsModalOpen(false)}
+//           ></div>
+//           {/* Modal Container */}
+//           <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative z-10">
+//             <h2 className="text-xl font-bold mb-4">Create New Item</h2>
+//             {Object.keys(formData).map((key) => (
+//               <div key={key} className="mb-3">
+//                 <label className="block text-gray-800 capitalize font-medium mb-1">
+//                   {key}
+//                 </label>
+//                 <input
+//                   type={key === "price" ? "number" : "text"}
+//                   name={key}
+//                   value={formData[key]}
+//                   onChange={(e) =>
+//                     setFormData({
+//                       ...formData,
+//                       [e.target.name]: e.target.value,
+//                     })
+//                   }
+//                   className="bg-gray-100 p-2 text-black rounded w-full outline-none"
+//                   required
+//                 />
+//               </div>
+//             ))}
+//             <div className="flex justify-end mt-4">
+//               <button
+//                 className="bg-gray-500 rounded text-white hover:bg-gray-700 mr-2 px-4 py-2"
+//                 onClick={() => setIsModalOpen(false)}
+//               >
+//                 Cancel
+//               </button>
+//               <button
+//                 className="bg-blue-500 rounded text-white font-medium hover:bg-blue-700 px-4 py-2 transition"
+//                 onClick={handleCreate}
+//               >
+//                 Create
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
+//       <ToastContainer />
+//     </div>
+//   );
+// }
+
+import React, { useState, useRef, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 import logo from "../../assets/images/logo_white.png";
 import {
   faMagnifyingGlass,
@@ -18,24 +340,31 @@ import {
   faCircleInfo,
   faMoon,
   faSun,
+  faBars,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTheme } from "../../context/ThemeProvider";
+import { useAuth } from "../../context/AuthProvider";
 import { useProducts } from "../../context/ProductProvider";
 import Home from "./components/HomeAdmin";
-import Product from "./components/ProductAdmin";
-import { useTheme } from "../../context/ThemeProvider";
+import ProductAdmin from "./components/ProductAdmin";
 import CustomersAdmin from "./components/CustomersAdmin";
 import ShopAdmin from "./components/ShopAdmin";
 import IncomeAdmin from "./components/IncomeAdmin";
 import PromoteAdmin from "./components/PromoteAdmin";
-import { toast, ToastContainer } from "react-toastify";
-import { useAuth } from "../../context/AuthProvider";
-import { Link } from "react-router-dom";
 
 export default function AdminDashboard() {
-  const { addProduct, products } = useProducts();
   const { theme, toggleTheme } = useTheme();
-  const { user, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth();
+  const { addProduct, products } = useProducts();
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedTab, setSelectedTab] = useState(0);
+  const searchInputRef = useRef(null);
+
+  // Modal state and form data for modal inputs
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
     image: "",
@@ -43,26 +372,25 @@ export default function AdminDashboard() {
     description: "",
     category: "",
   });
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedTab, setSelectedTab] = useState(0);
 
-  const searchInputRef = useRef(null);
+  // Keep focus on search input when switching to "Products" tab
+  useEffect(() => {
+    if (selectedTab === 1 && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [selectedTab]);
 
   const handleSearch = (e) => {
-    setSearchQuery(e.target.value);
-    const foundProduct = products.find((product) =>
-      product.title.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-
-    if (foundProduct) {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    if (query.length > 0) {
       setSelectedTab(1);
-      // Reassign focus after tab switch
-      setTimeout(() => {
-        if (searchInputRef.current) {
-          searchInputRef.current.focus();
-        }
-      }, 0);
     }
+  };
+
+  const handleTabClick = (index) => {
+    setSelectedTab(index);
+    setMenuOpen(false);
   };
 
   const handleLogout = async () => {
@@ -75,87 +403,57 @@ export default function AdminDashboard() {
     }
   };
 
+  // Handler for creating a new product using the modal
+  const handleCreate = async () => {
+    if (Object.values(formData).some((value) => !value)) {
+      toast.error("Please fill all fields");
+      return;
+    }
+    try {
+      await addProduct({
+        ...formData,
+        id: String(products.length + 1),
+        price: parseFloat(formData.price),
+        rating: {
+          count: Math.floor(Math.random() * 200) + 1,
+          rate: (Math.random() * 5).toFixed(1),
+        },
+      });
+    } catch (err) {
+      console.error("Error adding product:", err);
+      toast.error("Error adding product");
+    }
+    setIsModalOpen(false);
+    setFormData({
+      title: "",
+      image: "",
+      price: "",
+      description: "",
+      category: "",
+    });
+  };
+
   return (
-    <div className="bg-[#FFFFFF] min-h-screen w-screen dark:text-black overflow-hidden px-4 dark:bg-slate-900 dark:text-white">
-      {isOpen && (
-        <div className="flex justify-center fixed inset-0 items-center overflow-y-auto z-10">
-          <div
-            className="bg-gray-900 fixed inset-0 opacity-75"
-            onClick={() => setIsOpen(false)}
-          ></div>
-          <div className="bg-white rounded-lg shadow-xl w-full overflow-hidden sm:max-w-lg transform transition-all z-20">
-            <div className="modal bg-white pb-4 pt-5 px-4 sm:p-6 sm:pb-4">
-              {Object.keys(formData).map((key) => (
-                <div key={key}>
-                  <label className="text-gray-800 capitalize font-medium">
-                    {key}
-                  </label>
-                  <input
-                    type={key === "price" ? "number" : "text"}
-                    name={key}
-                    value={formData[key]}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        [e.target.name]: e.target.value,
-                      })
-                    }
-                    className="bg-gray-100 p-2 rounded w-full mb-3 mt-2 outline-none"
-                    required
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="bg-gray-200 text-right px-4 py-3">
-              <button
-                className="bg-gray-500 rounded text-white hover:bg-gray-700 mr-2 px-4 py-2"
-                onClick={() => setIsOpen(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="bg-blue-500 rounded text-white font-medium hover:bg-blue-700 px-4 py-2 transition"
-                onClick={() => {
-                  if (Object.values(formData).some((value) => !value)) {
-                    toast.error("Please fill all fields");
-                    return;
-                  }
-                  addProduct({
-                    ...formData,
-                    id: products.length + 1,
-                    price: parseFloat(formData.price),
-                    rating: {
-                      count: Math.floor(Math.random() * 200) + 1,
-                      rate: (Math.random() * 5).toFixed(1),
-                    },
-                  });
-                  setIsOpen(false);
-                  setFormData({
-                    title: "",
-                    image: "",
-                    price: "",
-                    description: "",
-                    category: "",
-                  });
-                }}
-              >
-                Create
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-      <header className="flex justify-between items-center px-4 py-4">
-        <div className="flex gap-10 items-center">
-          <Link to={"/home"}>
-            <img
-              src={logo}
-              alt="logo"
-              className="dark:invert-0 invert-100 w-[150px] h-[30px] items-center"
-            />
+    <div className="h-screen w-screen bg-white dark:bg-slate-900 dark:text-white overflow-hidden flex flex-col">
+      {/* HEADER */}
+      <header className="flex justify-between items-center py-4 px-4 bg-white dark:bg-slate-800">
+        {/* Left Section: Logo & Search */}
+        <div className="flex items-center gap-10 w-full lg:w-auto">
+          {/* Hamburger Menu Button */}
+          <button
+            className="lg:hidden text-2xl"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <FontAwesomeIcon icon={menuOpen ? faTimes : faBars} />
+          </button>
+
+          {/* Logo (Hidden on md and smaller devices) */}
+          <Link to="/home" className="hidden lg:block">
+            <img src={logo} alt="logo" className="w-[320px] h-[20px]" />
           </Link>
 
-          <div className="flex bg-[#F5F5F5] rounded-md text-black gap-3 items-center px-2 py-[5px]">
+          {/* Search Box */}
+          <div className="bg-gray-100 rounded-md text-black flex gap-3 items-center px-3 py-2 relative w-[40%] lg:w-[250%]">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
             <input
               ref={searchInputRef}
@@ -163,98 +461,189 @@ export default function AdminDashboard() {
               placeholder="Search Your Products"
               value={searchQuery}
               onChange={handleSearch}
-              className="bg-[#F5F5F5] border-0 w-80 outline-0"
+              className="bg-transparent border-0 w-full outline-none"
             />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-2 text-gray-500 hover:text-gray-700"
+              >
+                <FontAwesomeIcon icon={faTimes} />
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Right Section: Icons */}
         <div className="flex gap-4 items-center">
           <button
-            className="flex bg-[#3E6BE0] text-white cursor-pointer gap-2 items-center px-2 py-2"
-            onClick={() => setIsOpen(true)}
+            className="flex bg-blue-500 items-center cursor-pointer text-white px-4 py-2 rounded-md"
+            onClick={() => setIsModalOpen(true)}
           >
-            <FontAwesomeIcon icon={faPlus} />{" "}
-            <b className="font-semibold">Create</b>
+            <FontAwesomeIcon icon={faPlus} />
+            <span className="ml-2 font-semibold hidden md:inline-block">
+              Create
+            </span>
           </button>
-          <FontAwesomeIcon icon={faBell} className="text-2xl cursor-pointer" />
+          <FontAwesomeIcon
+            icon={faBell}
+            className="text-2xl cursor-pointer hidden md:hidden lg:block"
+          />
           <FontAwesomeIcon
             icon={faPencil}
-            className="text-2xl cursor-pointer"
+            className="text-2xl cursor-pointer hidden md:hidden lg:block"
           />
-          <FontAwesomeIcon icon={faUser} className="text-2xl cursor-pointer" />
+          <FontAwesomeIcon
+            icon={faUser}
+            className="text-2xl cursor-pointer hidden md:hidden lg:block"
+          />
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
           >
-            <FontAwesomeIcon
-              icon={theme === "light" ? faMoon : faSun}
-              className="w-5 h-5 cursor-pointer"
-            />
+            <FontAwesomeIcon icon={theme === "light" ? faMoon : faSun} />
           </button>
         </div>
       </header>
+
+      {/* Tabs Wrapper */}
       <Tabs
         selectedIndex={selectedTab}
-        onSelect={setSelectedTab}
-        className="flex h-full gap-2 items-start mt-5"
+        onSelect={handleTabClick}
+        className="flex flex-grow"
       >
-        <section className="flex flex-col h-[80vh] justify-between w-[20%]">
-          <TabList className="space-y-3">
-            <Tab className="flex cursor-pointer font-medium gap-4 items-center px-2 py-2">
-              <FontAwesomeIcon icon={faHouse} /> Home
-            </Tab>
-            <Tab className="flex cursor-pointer font-medium gap-4 items-center px-2 py-2">
-              <FontAwesomeIcon icon={faList} /> Products
-            </Tab>
-            <Tab className="flex cursor-pointer font-medium gap-4 items-center px-2 py-2">
-              <FontAwesomeIcon icon={faUserGroup} /> Orders
-            </Tab>
-            <Tab className="flex cursor-pointer font-medium gap-4 items-center px-2 py-2">
-              <FontAwesomeIcon icon={faGift} /> Shop
-            </Tab>
-            <Tab className="flex cursor-pointer font-medium gap-4 items-center px-2 py-2">
-              <FontAwesomeIcon icon={faWallet} /> Income
-            </Tab>
-            <Tab className="flex cursor-pointer font-medium gap-4 items-center px-2 py-2">
-              <FontAwesomeIcon icon={faBullhorn} /> Promote
-            </Tab>
+        {/* SIDEBAR */}
+        <div
+          className={`fixed top-0 left-0 h-full bg-white dark:bg-slate-900 shadow-md transition-all ${
+            menuOpen ? "w-2/3" : "w-0"
+          } overflow-hidden lg:w-[10%] lg:static flex flex-col justify-between`}
+        >
+          {/* Close Button */}
+          <button
+            className="lg:hidden absolute top-4 right-4 text-lg mb-12"
+            onClick={() => setMenuOpen(false)}
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+
+          {/* Sidebar Tabs */}
+          <TabList className="space-y-3 flex-grow mt-16">
+            {[
+              { icon: faHouse, label: "Home" },
+              { icon: faList, label: "Products" },
+              { icon: faUserGroup, label: "Orders" },
+              { icon: faGift, label: "Shop" },
+              { icon: faWallet, label: "Income" },
+              { icon: faBullhorn, label: "Promote" },
+            ].map((tab, index) => (
+              <Tab
+                key={index}
+                className="flex gap-4 items-center cursor-pointer px-2 py-2"
+                onClick={() => handleTabClick(index)}
+              >
+                <FontAwesomeIcon icon={tab.icon} /> {tab.label}
+              </Tab>
+            ))}
           </TabList>
-          <ul className="space-y-3">
-            <li className="flex cursor-pointer gap-4 items-center">
+
+          {/* Help & Logout */}
+          <ul className="p-4 space-y-3 border-t border-gray-200 dark:border-gray-700">
+            <li className="flex gap-4 items-center cursor-pointer px-2">
               <FontAwesomeIcon icon={faCircleInfo} /> Help
             </li>
             <li
-              className="flex cursor-pointer gap-4 items-center"
+              className="flex gap-4 items-center cursor-pointer px-2 text-red-600"
               onClick={handleLogout}
             >
-              <FontAwesomeIcon icon={faArrowRightFromBracket} />
-              <span className="text-red-600">Logout</span>
+              <FontAwesomeIcon icon={faArrowRightFromBracket} /> Logout
             </li>
           </ul>
-        </section>
-        <main className="bg-[#F5F5F5] h-auto rounded-md w-[78%] min-h-[80vh] px-2 py-2">
-          <div className="text-3xl font-bold my-4">
-            <h1 className="ps-4 dark:text-black">Dashboard</h1>
-          </div>
+        </div>
+
+        {/* MAIN CONTENT as TabPanels */}
+        <div className="flex flex-col w-full lg:w-[90%] h-full bg-white">
           <TabPanel>
-            <Home />
+            <div className="flex items-center justify-center h-full">
+              <Home />
+            </div>
           </TabPanel>
           <TabPanel>
-            <Product searchQuery={searchQuery} />
+            <div className="flex items-center justify-center h-full">
+              <ProductAdmin searchQuery={searchQuery} />
+            </div>
           </TabPanel>
           <TabPanel>
-            <CustomersAdmin />
+            <div className="flex items-center justify-center h-full">
+              <CustomersAdmin />
+            </div>
           </TabPanel>
           <TabPanel>
-            <ShopAdmin />
+            <div className="flex items-center justify-center h-full">
+              <ShopAdmin />
+            </div>
           </TabPanel>
           <TabPanel>
-            <IncomeAdmin />
+            <div className="flex items-center justify-center h-full">
+              <IncomeAdmin />
+            </div>
           </TabPanel>
           <TabPanel>
-            <PromoteAdmin />
+            <div className="flex items-center justify-center h-full">
+              <PromoteAdmin />
+            </div>
           </TabPanel>
-        </main>
+        </div>
       </Tabs>
+
+      {/* Modal: Hidden by default, absolute, centered, with high z-index */}
+      {isModalOpen && (
+        <div className="absolute inset-0 flex items-center justify-center z-50">
+          {/* Overlay */}
+          <div
+            className="fixed inset-0 bg-gray-900 opacity-75"
+            onClick={() => setIsModalOpen(false)}
+          ></div>
+          {/* Modal Container */}
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-lg p-6 relative z-10">
+            <h2 className="text-xl font-bold mb-4">Create New Item</h2>
+            {Object.keys(formData).map((key) => (
+              <div key={key} className="mb-3">
+                <label className="block text-gray-800 capitalize font-medium mb-1">
+                  {key}
+                </label>
+                <input
+                  type={key === "price" ? "number" : "text"}
+                  name={key}
+                  value={formData[key]}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      [e.target.name]: e.target.value,
+                    })
+                  }
+                  className="bg-gray-100 p-2 text-black rounded w-full outline-none"
+                  required
+                />
+              </div>
+            ))}
+            <div className="flex justify-end mt-4">
+              <button
+                className="bg-gray-500 rounded text-white hover:bg-gray-700 mr-2 px-4 py-2"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="bg-blue-500 rounded text-white font-medium hover:bg-blue-700 px-4 py-2 transition"
+                onClick={handleCreate}
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <ToastContainer />
     </div>
   );
