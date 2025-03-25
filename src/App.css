@@ -130,3 +130,6 @@
 body {
   overflow-x: hidden;
 }
+textarea::-webkit-scrollbar {
+  display: none;
+}

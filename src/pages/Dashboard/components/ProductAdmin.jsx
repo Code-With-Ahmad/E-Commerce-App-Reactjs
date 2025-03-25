@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useProducts } from "../../../context/ProductProvider";
 import { toast } from "react-toastify";
-import Loader from "../../../components/UI/Loader"; // Import Loader
+import Loader from "../../../components/UI/Loader";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FaTrashAlt } from "react-icons/fa";
-// import pencil from "../../../assets/images/pencil.png";
-import MyIcon from "../../../assets/images/pencil.svg";
-import PencilIcon from "../../../components/UI/PencilIcon";
-import TrashBinIcon from "../../../components/UI/TrashBinIcon";
+import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 
 const ProductAdmin = ({ searchQuery }) => {
   const { products, status, error, removeProduct, updateProduct } =
@@ -23,6 +17,14 @@ const ProductAdmin = ({ searchQuery }) => {
     description: "",
     category: "",
   });
+
+  // Default dropdown options.
+  const defaultCategories = [
+    "jewelery",
+    "mens clothing",
+    "womens clothing",
+    "electronics",
+  ];
 
   useEffect(() => {
     if (selectedProduct) {
@@ -49,8 +51,24 @@ const ProductAdmin = ({ searchQuery }) => {
       return;
     }
 
+    // Check if all fields are filled.
     if (Object.values(formData).some((value) => value === "")) {
       toast.error("Please fill all fields");
+      return;
+    }
+
+    // Check if at least one field has changed.
+    // Convert price to string for comparison.
+    if (
+      selectedProduct.title === formData.title &&
+      selectedProduct.image === formData.image &&
+      String(selectedProduct.price) === formData.price &&
+      selectedProduct.description === formData.description &&
+      selectedProduct.category === formData.category
+    ) {
+      toast.error(
+        "Please change at least one character to update the product."
+      );
       return;
     }
 
@@ -97,32 +115,75 @@ const ProductAdmin = ({ searchQuery }) => {
               setSelectedProduct(null);
             }}
           ></div>
-          <div className="bg-white rounded-lg shadow-xl w-full  overflow-hidden sm:max-w-lg transform transition-all z-20">
+          <div className="bg-white rounded-lg shadow-xl w-full overflow-hidden sm:max-w-lg transform transition-all z-20">
             <div className="modal bg-white pb-4 pt-5 px-4 sm:p-6 sm:pb-4">
               {Object.keys(formData).map((key) => (
                 <div key={key} className="mb-3">
                   <label className="text-gray-800 capitalize font-medium">
                     {key}
                   </label>
-                  <input
-                    type={key === "price" ? "number" : "text"}
-                    name={key}
-                    value={formData[key]}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        [e.target.name]: e.target.value,
-                      })
-                    }
-                    className="bg-gray-100 p-2 rounded w-full mt-2 outline-none"
-                    required
-                  />
+                  {key === "description" ? (
+                    <textarea
+                      name="description"
+                      value={formData.description}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          description: e.target.value,
+                        })
+                      }
+                      style={{
+                        scrollbarWidth: "none", // Firefox
+                        msOverflowStyle: "none", // IE 10+
+                      }}
+                      className="bg-gray-200 p-2 rounded w-full mt-2 outline-none text-black"
+                    />
+                  ) : key === "category" ? (
+                    <select
+                      name="category"
+                      value={formData.category}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          category: e.target.value,
+                        })
+                      }
+                      className="bg-gray-200 p-2 rounded w-full mt-2 outline-none text-black"
+                      required
+                    >
+                      {defaultCategories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                      {formData.category &&
+                        !defaultCategories.includes(formData.category) && (
+                          <option value={formData.category}>
+                            {formData.category}
+                          </option>
+                        )}
+                    </select>
+                  ) : (
+                    <input
+                      type={key === "price" ? "number" : "text"}
+                      name={key}
+                      value={formData[key]}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          [e.target.name]: e.target.value,
+                        })
+                      }
+                      className="bg-gray-200 p-2 rounded w-full mt-2 outline-none"
+                      required
+                    />
+                  )}
                 </div>
               ))}
             </div>
             <div className="bg-gray-200 text-right px-4 py-3">
               <button
-                className="bg-gray-500 rounded text-white hover:bg-gray-700 mr-2 px-4 py-2"
+                className="bg-gray-500 text-sm cursor-pointer rounded text-white hover:bg-gray-700 mr-2 px-4 py-2"
                 onClick={() => {
                   setIsOpen(false);
                   setSelectedProduct(null);
@@ -131,7 +192,7 @@ const ProductAdmin = ({ searchQuery }) => {
                 Cancel
               </button>
               <button
-                className="bg-blue-500 rounded text-white font-medium hover:bg-blue-700 px-4 py-2 transition"
+                className="bg-blue-500 text-sm cursor-pointer rounded text-white font-medium hover:bg-blue-700 px-4 py-2 transition"
                 onClick={handleModalUpdate}
               >
                 Update
@@ -152,12 +213,12 @@ const ProductAdmin = ({ searchQuery }) => {
           <div className="text-center text-red-500">Error: {error}</div>
         )}
         {status === "succeeded" && (
-          <div className="grid grid-cols-1 gap-6 mb-10">
+          <div className="grid md:grid-cols-2 gap-8 mb-10">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((item) => (
                 <div
                   key={item.id}
-                  className="flex bg-white p-4 rounded-lg shadow-lg text-black "
+                  className="flex bg-white p-4 rounded-lg shadow-lg opacity-90 text-black hover:cursor-pointer hover:opacity-100"
                 >
                   <Link to={`/product/${item.id}`}>
                     <img
@@ -166,11 +227,13 @@ const ProductAdmin = ({ searchQuery }) => {
                       className="h-24 rounded w-24 object-contain"
                     />
                   </Link>
-                  <div className="flex-1 ml-4">
-                    <h2 className="text-md font-semibold">{item.title}</h2>
-                    <p className="font-semibold">${item.price}</p>
+                  <div className="flex-1 flex flex-col ml-4 pt-3 gap-2">
+                    <h2 className="text-sm font-medium">{item.title}</h2>
+                    <p className="text-sm font-medium text-blue-700">
+                      ${item.price}
+                    </p>
                   </div>
-                  <div className="ps-4 flex items-center gap-2">
+                  <div className="pb-4 flex justify-center items-end gap-2">
                     <button
                       className="cursor-pointer"
                       onClick={() => {
@@ -178,38 +241,14 @@ const ProductAdmin = ({ searchQuery }) => {
                         setIsOpen(true);
                       }}
                     >
-                      {/* <FontAwesomeIcon
-                        icon={faPen}
-                        className="text-2xl border-2 border-blue-600 hover:border-blue-500 p-1 rounded"
-                      /> */}
-
-                      {/* Pen Icon Here */}
-                      <PencilIcon />
+                      <PencilSquareIcon className="h-6 w-6 text-blue-500 hover:text-blue-600" />
                     </button>
-                    {/* <button
-                      className="bg-green-500 rounded text-white cursor-pointer hover:bg-green-400 ml-4 px-3 py-1"
-                      onClick={() => {
-                        setSelectedProduct(item);
-                        setIsOpen(true);
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={faPen}
-                        className="text-2xl"
-                      />
-                    </button> */}
                     <button
                       onClick={() => removeProduct(item.id)}
-                      className="cursor-pointer "
+                      className="cursor-pointer"
                     >
-                      <TrashBinIcon />
+                      <TrashIcon className="h-6 w-6 text-red-500 hover:text-red-600" />
                     </button>
-                    {/* <button
-                      onClick={() => removeProduct(item.id)}
-                      className="bg-red-500 rounded text-white cursor-pointer hover:bg-red-600 ml-4 px-3 py-1"
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button> */}
                   </div>
                 </div>
               ))

@@ -449,11 +449,15 @@ export default function AdminDashboard() {
 
           {/* Logo (Hidden on md and smaller devices) */}
           <Link to="/home" className="hidden lg:block">
-            <img src={logo} alt="logo" className="w-[320px] h-[20px]" />
+            <img
+              src={logo}
+              alt="logo"
+              className="w-[320px] lg:w-[500px] lg:h-[30px] h-[20px] dark:invert-0 invert-100"
+            />
           </Link>
 
           {/* Search Box */}
-          <div className="bg-gray-100 rounded-md text-black flex gap-3 items-center px-3 py-2 relative w-[40%] lg:w-[250%]">
+          <div className="bg-gray-100 rounded-md text-black flex gap-3 items-center px-3 py-2 relative w-[40%] lg:w-[220%]">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
             <input
               ref={searchInputRef}
@@ -487,15 +491,15 @@ export default function AdminDashboard() {
           </button>
           <FontAwesomeIcon
             icon={faBell}
-            className="text-2xl cursor-pointer hidden md:hidden lg:block"
+            className="text-lg cursor-pointer hidden md:hidden lg:block"
           />
           <FontAwesomeIcon
             icon={faPencil}
-            className="text-2xl cursor-pointer hidden md:hidden lg:block"
+            className="text-lg cursor-pointer hidden md:hidden lg:block"
           />
           <FontAwesomeIcon
             icon={faUser}
-            className="text-2xl cursor-pointer hidden md:hidden lg:block"
+            className="text-lg cursor-pointer hidden md:hidden lg:block"
           />
           <button
             onClick={toggleTheme}
@@ -514,9 +518,9 @@ export default function AdminDashboard() {
       >
         {/* SIDEBAR */}
         <div
-          className={`fixed top-0 left-0 h-full bg-white dark:bg-slate-900 shadow-md transition-all ${
+          className={`fixed top-0 left-0 h-full z-10 bg-white dark:bg-slate-900 shadow-md transition-all ${
             menuOpen ? "w-2/3" : "w-0"
-          } overflow-hidden lg:w-[10%] lg:static flex flex-col justify-between`}
+          } overflow-hidden lg:w-[15%] lg:static flex flex-col justify-between`}
         >
           {/* Close Button */}
           <button
@@ -538,7 +542,7 @@ export default function AdminDashboard() {
             ].map((tab, index) => (
               <Tab
                 key={index}
-                className="flex gap-4 items-center cursor-pointer px-2 py-2"
+                className="flex gap-4 items-center cursor-pointer px-2 py-2 lg:px-8"
                 onClick={() => handleTabClick(index)}
               >
                 <FontAwesomeIcon icon={tab.icon} /> {tab.label}
