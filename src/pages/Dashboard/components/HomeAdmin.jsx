@@ -40,7 +40,7 @@ const HomeAdmin = () => {
     const fetchData = async () => {
       await fetchOrders();
       await fetchCompletedOrders();
-      setLoading(false); // Stop loading when data is fetched
+      setLoading(false);
     };
 
     fetchData();
@@ -77,13 +77,13 @@ const HomeAdmin = () => {
           <h1 className="text-center text-xl font-semibold dark:text-black">
             Customers
           </h1>
-          <p className="text-3xl text-center font-semibold py-2">
+          <p className="lg:text-3xl text-lg text-center font-semibold py-2">
             {customerCount}
           </p>
         </div>
         <div className="rounded-lg w-[100%] px-3 py-3">
           <h1 className="text-center text-xl font-semibold">Total Income</h1>
-          <p className="text-3xl text-center font-semibold py-2">
+          <p className="lg:text-3xl text-lg text-center font-semibold py-2">
             $ {totalIncome.toFixed(2)}
           </p>
         </div>
@@ -91,7 +91,7 @@ const HomeAdmin = () => {
       <div className="flex bg-[#F5F5F5] justify-evenly mt-5 rounded-md w-[90%] items-center mx-auto px-4 py-4">
         <div className="bg-white rounded-lg w-[100%] px-3 py-3">
           <h1 className="text-center text-xl font-semibold">Pending Orders</h1>
-          <p className="text-3xl text-center font-semibold py-2">
+          <p className="lg:text-3xl text-lg text-center font-semibold py-2">
             {orders.length}
           </p>
         </div>
@@ -99,7 +99,7 @@ const HomeAdmin = () => {
           <h1 className="text-center text-xl font-semibold">
             Completed Orders
           </h1>
-          <p className="text-3xl text-center font-semibold py-2">
+          <p className="lg:text-3xl text-lg text-center font-semibold py-2">
             {customerCount - orders.length}
           </p>
         </div>

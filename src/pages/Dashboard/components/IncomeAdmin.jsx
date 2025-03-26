@@ -31,14 +31,14 @@ const IncomeAdmin = () => {
   }, []);
 
   return (
-    <div className="container p-4 max-h-[70vh] mx-auto overflow-y-auto dark:text-black">
+    <div className="container p-4 max-h-[70vh] mx-auto overflow-y-auto dark:text-black ">
       <h1 className="text-2xl font-semibold mb-4">Income Overview</h1>
       {loading ? (
         <div className="flex justify-center items-center h-40">
           <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500"></div>
         </div>
       ) : orders.length === 0 ? (
-        <p className="absolute text-center top-[50%] left-[50%]">
+        <p className="absolute text-center top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
           No completed orders found.
         </p>
       ) : (

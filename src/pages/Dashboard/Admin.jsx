@@ -43,7 +43,6 @@ export default function AdminDashboard() {
   const [selectedTab, setSelectedTab] = useState(0);
   const searchInputRef = useRef(null);
 
-  // Modal state and form data for modal inputs
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -53,7 +52,6 @@ export default function AdminDashboard() {
     category: "",
   });
 
-  // Keep focus on search input when switching to "Products" tab
   useEffect(() => {
     if (selectedTab === 1 && searchInputRef.current) {
       searchInputRef.current.focus();
@@ -83,7 +81,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // Handler for creating a new product using the modal
   const handleCreate = async () => {
     if (Object.values(formData).some((value) => !value)) {
       toast.error("Please fill all fields");
@@ -145,12 +142,12 @@ export default function AdminDashboard() {
               placeholder="Search Your Products"
               value={searchQuery}
               onChange={handleSearch}
-              className="bg-transparent border-0 w-full outline-none"
+              className="bg-transparent border-0 w-[80%] lg:w-[90%] py-2 outline-none"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-2 text-gray-500 hover:text-gray-700"
+                className=" absolute right-2 text-gray-500 hover:text-gray-700"
               >
                 <FontAwesomeIcon icon={faTimes} />
               </button>
@@ -169,18 +166,20 @@ export default function AdminDashboard() {
               Create
             </span>
           </button>
-          <FontAwesomeIcon
-            icon={faBell}
-            className="text-lg cursor-pointer hidden md:hidden lg:block"
-          />
-          <FontAwesomeIcon
-            icon={faPencil}
-            className="text-lg cursor-pointer hidden md:hidden lg:block"
-          />
-          <FontAwesomeIcon
-            icon={faUser}
-            className="text-lg cursor-pointer hidden md:hidden lg:block"
-          />
+          <div className="md:flex gap-3 hidden">
+            <FontAwesomeIcon
+              icon={faBell}
+              className="text-lg cursor-pointer hidden md:hidden lg:block"
+            />
+            <FontAwesomeIcon
+              icon={faPencil}
+              className="text-lg cursor-pointer hidden md:hidden lg:block"
+            />
+            <FontAwesomeIcon
+              icon={faUser}
+              className="text-lg cursor-pointer hidden md:hidden lg:block"
+            />
+          </div>
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"

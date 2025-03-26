@@ -18,7 +18,6 @@ const ProductAdmin = ({ searchQuery }) => {
     category: "",
   });
 
-
   const defaultCategories = [
     "jewelery",
     "men's clothing",
@@ -51,12 +50,10 @@ const ProductAdmin = ({ searchQuery }) => {
       return;
     }
 
-  
     if (Object.values(formData).some((value) => value === "")) {
       toast.error("Please fill all fields");
       return;
     }
-
 
     if (JSON.stringify(selectedProduct) === JSON.stringify(formData)) {
       toast.error("No changes detected.");
@@ -124,8 +121,8 @@ const ProductAdmin = ({ searchQuery }) => {
                         })
                       }
                       style={{
-                        scrollbarWidth: "none", 
-                        msOverflowStyle: "none", 
+                        scrollbarWidth: "none",
+                        msOverflowStyle: "none",
                       }}
                       className="bg-gray-200 p-2 rounded w-full mt-2 outline-none text-black"
                     />
@@ -194,7 +191,7 @@ const ProductAdmin = ({ searchQuery }) => {
       )}
 
       {/* Product List */}
-      <div className="container mt-20 p-4 max-h-[70vh] mx-auto overflow-y-auto">
+      <div className="container relative mt-20 p-4 max-h-[70vh] mx-auto overflow-y-auto">
         {status === "loading" && (
           <div className="flex justify-center items-center h-[70vh]">
             <Loader />
@@ -244,7 +241,7 @@ const ProductAdmin = ({ searchQuery }) => {
                 </div>
               ))
             ) : (
-              <p className="text-center text-gray-500 absolute top-[50%] left-[50%]">
+              <p className="text-center text-gray-500 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ">
                 No products found.
               </p>
             )}

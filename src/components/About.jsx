@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const About = () => {
   return (
@@ -7,12 +8,14 @@ const About = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pt-8 xl:grid-cols-[2fr_1fr_1fr_2fr]">
           <div className="space-y-4 ">
             <div className="w-32">
-              <img
-                src="//rokan-theme.myshopify.com/cdn/shop/files/logo_white.png?v=1719496957&width=533"
-                alt="Rokan Logo"
-                className="w-full h-auto"
-                loading="lazy"
-              />
+              <Link to={"/home"}>
+                <img
+                  src="//rokan-theme.myshopify.com/cdn/shop/files/logo_white.png?v=1719496957&width=533"
+                  alt="Rokan Logo"
+                  className="w-full h-auto"
+                  loading="lazy"
+                />
+              </Link>
             </div>
             <div className="space-y-2 text-sm">
               <p className="text-gray-400 py-2 lg:pe-20 text-md xl:text-[17px]">

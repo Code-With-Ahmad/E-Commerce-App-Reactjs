@@ -63,7 +63,7 @@ const CustomersAdmin = () => {
 
   const handleSort = (field) => {
     if (sortField === field) {
-      // Toggle sort direction
+    
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortField(field);
@@ -83,7 +83,7 @@ const CustomersAdmin = () => {
           aValue = new Date(a.orderDate);
           bValue = new Date(b.orderDate);
         } else if (sortField === "name") {
-          // Sort alphabetically by the first product's title if available
+     
           aValue = a.items && a.items[0] ? a.items[0].title.toLowerCase() : "";
           bValue = b.items && b.items[0] ? b.items[0].title.toLowerCase() : "";
         }
