@@ -32,8 +32,8 @@ npm install
 
 To configure Firebase in your project, follow these steps:
 
-- 1. Create a .env file at the root level, alongside the src folder.
-- 2. Copy and paste the following code into the .env file:
+- Create a .env file at the root level, alongside the src folder.
+- Copy and paste the following code into the .env file:
 
 ```
 VITE_FIREBASE_API_KEY = "your_api_key"
