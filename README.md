@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is a full-featured eCommerce web application built using React.js and Firebase. Users can sign up or log in using email/password authentication or Google authentication. The application allows users to add products to the cart and mark them as favorites, with all data stored in Firebase Firestore.
+This is a comprehensive eCommerce web application built with React.js and Firebase. Users can sign up or log in using email/password authentication or Google authentication. They can add products to their cart, mark items as favorites, and securely store all data in Firebase Firestore. The application also includes an Admin Panel for managing products, orders, and user data.
 
 ## Features
 
