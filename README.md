@@ -30,19 +30,24 @@ npm install
 
 ### 3. Set Up Firebase Configuration
 
-Modify the .env file by inserting your personal Firebase account key as follows:
+To configure Firebase in your project, follow these steps:
+
+- 1. Create a .env file at the root level, alongside the src folder.
+- 2. Copy and paste the following code into the .env file:
 
 ```
-VITE_FIREBASE_API_KEY=your_api_key
-VITE_FIREBASE_Auth_Domain=your_auth_domain
-VITE_FIREBASE_Project_ID=your_project_id
-VITE_FIREBASE_Storge_Bucket=your_storage_bucket
-VITE_FIREBASE_Message_Sender_Id=your_sender_id
-VITE_FIREBASE_App_Id=your_app_id
-VITE_FIREBASE_Measurement_Id=your_measurement_id
+VITE_FIREBASE_API_KEY = "your_api_key"
+VITE_FIREBASE_Auth_Domain = "your_auth_domain"
+VITE_FIREBASE_Project_ID = "your_project_id"
+VITE_FIREBASE_Storge_Bucket = "your_storage_bucket"
+VITE_FIREBASE_Message_Sender_Id = "your_sender_id"
+VITE_FIREBASE_App_Id = "your_app_id"
+VITE_FIREBASE_Measurement_Id = "your_measurement_id"
 ```
 
-Replace `your_*` values with your Firebase project credentials.
+Replace your\_\* placeholders with your actual Firebase project credentials.
+
+This ensures secure and efficient integration of Firebase into your project.
 
 ### 4. Run the Project
 
