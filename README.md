@@ -62,6 +62,8 @@ npm run dev
 - Tailwind CSS (For Styling)
 - React Router
 - Redux Toolkit (for state management)
+- Axios (API Call)
+- FakeStoreApi (for Products Data)
 
 ## Contribution
 
