@@ -45,7 +45,7 @@ VITE_FIREBASE_App_Id = "your_app_id"
 VITE_FIREBASE_Measurement_Id = "your_measurement_id"
 ```
 
-Replace your\_\* placeholders with your actual Firebase project credentials.
+- Replace your\_\* placeholders with your actual Firebase project credentials.
 
 This ensures secure and efficient integration of Firebase into your project.
 
