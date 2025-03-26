@@ -70,7 +70,7 @@ const HomeAdmin = () => {
   }
 
   return (
-    <div className="bg-white h-[70vh] overflow-y-auto dark:text-black">
+    <div className="bg-white mt-20 h-[70vh] overflow-y-auto dark:text-black">
       <h1 className="text-xl font-semibold px-2 py-3 "></h1>
       <div className="flex bg-[#F5F5F5] justify-evenly rounded-md w-[90%] items-center mx-auto px-4 py-4 mt-10">
         <div className="bg-white rounded-lg w-[100%] px-3 py-3">

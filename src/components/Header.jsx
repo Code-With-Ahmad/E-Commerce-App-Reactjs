@@ -45,7 +45,7 @@ const Header = () => {
     }
   };
 
-  // Define mobile menu items, adding 'admin' if user is admin.
+ 
   const mobileMenuItems = ["home", "shop", "product", "pages", "blog"];
   if (isAdmin) {
     mobileMenuItems.push("admin");

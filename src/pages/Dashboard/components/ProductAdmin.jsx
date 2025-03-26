@@ -18,7 +18,7 @@ const ProductAdmin = ({ searchQuery }) => {
     category: "",
   });
 
-  // Default dropdown options.
+
   const defaultCategories = [
     "jewelery",
     "men's clothing",
@@ -51,24 +51,15 @@ const ProductAdmin = ({ searchQuery }) => {
       return;
     }
 
-    // Check if all fields are filled.
+  
     if (Object.values(formData).some((value) => value === "")) {
       toast.error("Please fill all fields");
       return;
     }
 
-    // Check if at least one field has changed.
-    // Convert price to string for comparison.
-    if (
-      selectedProduct.title === formData.title &&
-      selectedProduct.image === formData.image &&
-      String(selectedProduct.price) === formData.price &&
-      selectedProduct.description === formData.description &&
-      selectedProduct.category === formData.category
-    ) {
-      toast.error(
-        "Please change at least one character to update the product."
-      );
+
+    if (JSON.stringify(selectedProduct) === JSON.stringify(formData)) {
+      toast.error("No changes detected.");
       return;
     }
 
@@ -133,8 +124,8 @@ const ProductAdmin = ({ searchQuery }) => {
                         })
                       }
                       style={{
-                        scrollbarWidth: "none", // Firefox
-                        msOverflowStyle: "none", // IE 10+
+                        scrollbarWidth: "none", 
+                        msOverflowStyle: "none", 
                       }}
                       className="bg-gray-200 p-2 rounded w-full mt-2 outline-none text-black"
                     />
