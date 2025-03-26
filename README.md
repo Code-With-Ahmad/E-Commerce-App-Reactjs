@@ -59,6 +59,7 @@ npm run dev
 
 - React.js
 - Firebase (Authentication & Firestore)
+- Tailwind CSS (For Styling)
 - React Router
 - Redux Toolkit (for state management)
 
