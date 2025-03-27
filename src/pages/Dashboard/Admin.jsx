@@ -142,7 +142,7 @@ export default function AdminDashboard() {
               placeholder="Search Your Products"
               value={searchQuery}
               onChange={handleSearch}
-              className="bg-transparent border-0 w-[80%] lg:w-[90%] py-2 outline-none"
+              className="bg-transparent border-0 w-[80%] lg:w-[90%] outline-none"
             />
             {searchQuery && (
               <button
