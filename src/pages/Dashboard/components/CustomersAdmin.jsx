@@ -63,7 +63,6 @@ const CustomersAdmin = () => {
 
   const handleSort = (field) => {
     if (sortField === field) {
-    
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortField(field);
@@ -80,10 +79,12 @@ const CustomersAdmin = () => {
           aValue = a.totalPrice || a.total || 0;
           bValue = b.totalPrice || b.total || 0;
         } else if (sortField === "date") {
-          aValue = new Date(a.orderDate);
-          bValue = new Date(b.orderDate);
+          // Validate orderTime. If invalid, fallback to epoch time.
+          const aDate = a.orderTime ? new Date(a.orderTime) : new Date(0);
+          const bDate = b.orderTime ? new Date(b.orderTime) : new Date(0);
+          aValue = !isNaN(aDate) ? aDate : new Date(0);
+          bValue = !isNaN(bDate) ? bDate : new Date(0);
         } else if (sortField === "name") {
-     
           aValue = a.items && a.items[0] ? a.items[0].title.toLowerCase() : "";
           bValue = b.items && b.items[0] ? b.items[0].title.toLowerCase() : "";
         }
@@ -97,12 +98,21 @@ const CustomersAdmin = () => {
 
   const formattedOrders = useMemo(
     () =>
-      sortedOrders.map((order) => ({
-        ...order,
-        formattedDate: new Intl.DateTimeFormat("en-US", {
-          dateStyle: "medium",
-        }).format(new Date(order.orderDate)),
-      })),
+      sortedOrders.map((order) => {
+        let formattedDate = "Invalid Date";
+        if (order.orderTime) {
+          const dateObj = new Date(order.orderTime);
+          if (!isNaN(dateObj)) {
+            formattedDate = new Intl.DateTimeFormat("en-US", {
+              dateStyle: "medium",
+            }).format(dateObj);
+          }
+        }
+        return {
+          ...order,
+          formattedDate,
+        };
+      }),
     [sortedOrders]
   );
 
@@ -151,7 +161,7 @@ const CustomersAdmin = () => {
               </th>
             </tr>
           </thead>
-          <tbody className="">
+          <tbody>
             {formattedOrders.map((order, index) => {
               const items = order.items || [];
               return (
@@ -162,11 +172,11 @@ const CustomersAdmin = () => {
                   <td className="text-center align-middle">
                     <div className="py-4 px-5">{order.id}</div>
                   </td>
-                  <td className=" align-middle">
+                  <td className="align-middle">
                     <div className="py-4 px-5">
                       <div className="space-y-5">
                         {items.map((item, idx) => (
-                          <div key={idx} className="flex items-center ">
+                          <div key={idx} className="flex items-center">
                             <img
                               src={item.image}
                               alt={item.title}

@@ -245,29 +245,35 @@ export default function AdminDashboard() {
 
         {/* MAIN CONTENT as TabPanels */}
         <div className="flex flex-col w-full lg:w-[90%] h-full bg-white">
+          {/* For Home */}
           <TabPanel>
             <Home />
           </TabPanel>
+          {/* For Products */}
           <TabPanel>
             <div className="flex items-center justify-center h-full ">
               <ProductAdmin searchQuery={searchQuery} />
             </div>
           </TabPanel>
+          {/* For Orders */}
           <TabPanel>
             <div className="flex items-center justify-center h-full">
               <CustomersAdmin />
             </div>
           </TabPanel>
+          {/* For Shop */}
           <TabPanel>
             <div className="flex items-center justify-center h-full">
               <ShopAdmin />
             </div>
           </TabPanel>
+          {/* For Income */}
           <TabPanel>
             <div className="flex items-center justify-center h-full mt-10">
               <IncomeAdmin />
             </div>
           </TabPanel>
+          {/* For Promotion */}
           <TabPanel>
             <div className="flex items-center justify-center h-full">
               <PromoteAdmin />
