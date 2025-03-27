@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
   collection,
-  query,
-  orderBy,
   doc,
   setDoc,
   deleteDoc,
@@ -19,11 +17,9 @@ const CustomersAdmin = () => {
   const [sortField, setSortField] = useState(null);
   const [sortDirection, setSortDirection] = useState("asc");
 
+  // Fetch orders from Firestore in real-time
   useEffect(() => {
-    const ordersQuery = query(
-      collection(db, "orders"),
-      orderBy("orderTime", "asc")
-    );
+    const ordersQuery = collection(db, "orders");
     const unsubscribe = onSnapshot(
       ordersQuery,
       (querySnapshot) => {
@@ -41,6 +37,7 @@ const CustomersAdmin = () => {
     return () => unsubscribe();
   }, []);
 
+  // Handle marking an order as complete
   const handleComplete = async (orderId, orderData) => {
     if (processingOrders[orderId]) return;
 
@@ -61,6 +58,7 @@ const CustomersAdmin = () => {
     }
   };
 
+  // Handle sorting when clicking table headers
   const handleSort = (field) => {
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
@@ -70,24 +68,47 @@ const CustomersAdmin = () => {
     }
   };
 
+  // Memoized sorting logic for orders
   const sortedOrders = useMemo(() => {
     let sorted = [...orders];
     if (sortField) {
       sorted.sort((a, b) => {
         let aValue, bValue;
+
         if (sortField === "price") {
           aValue = a.totalPrice || a.total || 0;
           bValue = b.totalPrice || b.total || 0;
         } else if (sortField === "date") {
-          // Validate orderTime. If invalid, fallback to epoch time.
-          const aDate = a.orderTime ? new Date(a.orderTime) : new Date(0);
-          const bDate = b.orderTime ? new Date(b.orderTime) : new Date(0);
-          aValue = !isNaN(aDate) ? aDate : new Date(0);
-          bValue = !isNaN(bDate) ? bDate : new Date(0);
+          try {
+            if (!a.orderDate || !a.orderTime) {
+              throw new Error("Missing date/time");
+            }
+            aValue = new Date(`${a.orderDate} ${a.orderTime}`);
+            if (isNaN(aValue.getTime())) {
+              throw new Error("Invalid date");
+            }
+          } catch (e) {
+            console.error(`Error parsing date for order ${a.id}:`, e.message);
+            aValue = new Date(0); // Fallback for sorting
+          }
+
+          try {
+            if (!b.orderDate || !b.orderTime) {
+              throw new Error("Missing date/time");
+            }
+            bValue = new Date(`${b.orderDate} ${b.orderTime}`);
+            if (isNaN(bValue.getTime())) {
+              throw new Error("Invalid date");
+            }
+          } catch (e) {
+            console.error(`Error parsing date for order ${b.id}:`, e.message);
+            bValue = new Date(0); // Fallback for sorting
+          }
         } else if (sortField === "name") {
           aValue = a.items && a.items[0] ? a.items[0].title.toLowerCase() : "";
           bValue = b.items && b.items[0] ? b.items[0].title.toLowerCase() : "";
         }
+
         if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
         if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
         return 0;
@@ -96,26 +117,34 @@ const CustomersAdmin = () => {
     return sorted;
   }, [orders, sortField, sortDirection]);
 
-  const formattedOrders = useMemo(
-    () =>
-      sortedOrders.map((order) => {
-        let formattedDate = "Invalid Date";
-        if (order.orderTime) {
-          const dateObj = new Date(order.orderTime);
-          if (!isNaN(dateObj)) {
-            formattedDate = new Intl.DateTimeFormat("en-US", {
-              dateStyle: "medium",
-            }).format(dateObj);
-          }
+  // Memoized formatted orders with readable date display
+  const formattedOrders = useMemo(() => {
+    return sortedOrders.map((order) => ({
+      ...order,
+      formattedDate: (() => {
+        if (!order.orderDate || !order.orderTime) {
+          console.warn(`Missing orderDate or orderTime for order: ${order.id}`);
+          return "N/A";
         }
-        return {
-          ...order,
-          formattedDate,
-        };
-      }),
-    [sortedOrders]
-  );
 
+        try {
+          const dt = new Date(`${order.orderDate} ${order.orderTime}`);
+          if (isNaN(dt.getTime())) {
+            throw new Error("Invalid date");
+          }
+          // Display only the date in a readable format (e.g., "March 27, 2025")
+          return new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
+            dt
+          );
+        } catch (e) {
+          console.error(`Invalid date for order ${order.id}:`, e.message);
+          return "Invalid Date";
+        }
+      })(),
+    }));
+  }, [sortedOrders]);
+
+  // Render the component
   return (
     <div className="container p-4 min-h-[vh] h-[70vh] mx-auto overflow-y-auto dark:text-black">
       <h1 className="text-2xl font-semibold mb-4">Orders</h1>
@@ -161,7 +190,7 @@ const CustomersAdmin = () => {
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="">
             {formattedOrders.map((order, index) => {
               const items = order.items || [];
               return (
