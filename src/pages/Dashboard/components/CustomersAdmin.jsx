@@ -119,29 +119,39 @@ const CustomersAdmin = () => {
 
   // Memoized formatted orders with readable date display
   const formattedOrders = useMemo(() => {
-    return sortedOrders.map((order) => ({
-      ...order,
-      formattedDate: (() => {
-        if (!order.orderDate || !order.orderTime) {
-          console.warn(`Missing orderDate or orderTime for order: ${order.id}`);
-          return "N/A";
-        }
+    return sortedOrders.map((order) => {
+      if (!order.orderDate || !order.orderTime) {
+        console.warn(`Missing orderDate or orderTime for order: ${order.id}`);
+        return { ...order, formattedDate: "N/A" };
+      }
 
-        try {
-          const dt = new Date(`${order.orderDate} ${order.orderTime}`);
-          if (isNaN(dt.getTime())) {
-            throw new Error("Invalid date");
-          }
-          // Display only the date in a readable format (e.g., "March 27, 2025")
-          return new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
-            dt
-          );
-        } catch (e) {
-          console.error(`Invalid date for order ${order.id}:`, e.message);
-          return "Invalid Date";
-        }
-      })(),
-    }));
+      let formattedDate;
+      try {
+        console.log(
+          `Raw orderDate: ${order.orderDate}, orderTime: ${order.orderTime}`
+        );
+
+        // Convert DD/MM/YYYY to YYYY-MM-DD
+        const [day, month, year] = order.orderDate.split("/");
+        const formattedOrderDate = `${year}-${month}-${day}`;
+
+        // Combine date and time
+        const dateTimeString = `${formattedOrderDate} ${order.orderTime}`;
+        const dt = new Date(dateTimeString);
+
+        if (isNaN(dt.getTime())) throw new Error("Invalid date format");
+
+        formattedDate = new Intl.DateTimeFormat("en-US", {
+          dateStyle: "long",
+          timeStyle: "short",
+        }).format(dt);
+      } catch (e) {
+        console.error(`Error parsing date for order ${order.id}:`, e.message);
+        formattedDate = "Invalid Date";
+      }
+
+      return { ...order, formattedDate };
+    });
   }, [sortedOrders]);
 
   // Render the component
@@ -174,7 +184,8 @@ const CustomersAdmin = () => {
                 className="cursor-pointer text-center align-middle"
               >
                 <div className="py-4 px-2">
-                  Date <FontAwesomeIcon icon={faSort} className="ml-1" />
+                  Date and Time{" "}
+                  <FontAwesomeIcon icon={faSort} className="ml-1" />
                 </div>
               </th>
               <th
