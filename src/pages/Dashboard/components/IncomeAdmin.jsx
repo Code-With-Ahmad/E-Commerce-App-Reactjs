@@ -19,6 +19,7 @@ const IncomeAdmin = () => {
         ...doc.data(),
       }));
       setOrders(ordersData);
+      console.log("Orders Data:", ordersData);
     } catch (error) {
       toast.error("Error fetching completed orders: " + error.message);
     } finally {
